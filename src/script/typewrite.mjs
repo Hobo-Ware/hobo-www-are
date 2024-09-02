@@ -5,7 +5,6 @@ export function typewrite(element, messages, options = {}) {
         characterWipeDelay = 1000 / 60,
     } = options;
 
-
     const state = {
         messageIndex: 0,
         characterIndex: 0,
@@ -71,6 +70,8 @@ export function typewrite(element, messages, options = {}) {
     function start() {
         const isDoneDisplayingAllMessages = messages.length - 1 === state.messageIndex;
         if (state.isDoneTyping && isDoneDisplayingAllMessages) {
+            console.log('done');
+            element.dispatchEvent(new Event('typewrite:done'));
             return;
         }
 
