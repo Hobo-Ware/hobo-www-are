@@ -22,6 +22,11 @@ p {
     text-align: center;
 }
 
+p:empty:before {
+    content: ' ';
+    white-space: pre;
+  }
+
 .italic {
     font-style: italic;
 }
