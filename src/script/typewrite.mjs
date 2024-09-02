@@ -1,4 +1,4 @@
-export function typeWrite(element, messages) {
+export function typewrite(element, messages) {
     const nextMessageDelay = 2500;
     const characterTypeDelay = 1000 / 24;
 
