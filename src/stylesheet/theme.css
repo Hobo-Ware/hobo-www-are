@@ -6,15 +6,15 @@
     --inactive: #bdc3c7;
 
     --primary: #848ccf;
-    --color-bg: #efefef;
-    --color-fg: #333;
+    --color-bg: #F8F4EE;
+    --color-fg: #302E2C;
 }
 
 :root[data-theme='dark'] {
     --inactive: #e8ecf1;
 
-    --color-bg: #333;
-    --color-fg: #efefef;
+    --color-bg: #2D2D2D;
+    --color-fg: #EFEBE9;
     --primary: #fbc093;
 }
 
