@@ -11,6 +11,10 @@ export function typewrite(element, messages) {
 
     function type(currentTime) {
         const message = messages[state.messageIndex];
+
+        if (!message) {
+            return;
+        }
         
         const isPrintingCharacter = state.characterIndex < message.length;
 
@@ -26,7 +30,7 @@ export function typewrite(element, messages) {
         if (!isPrintingCharacter && elapsedMessagePritingTime >= nextMessageDelay) {
             element.textContent = "";
             state.characterIndex = 0;
-            state.messageIndex = (state.messageIndex + 1) % messages.length;
+            state.messageIndex += 1;
             state.messageQueueTime = currentTime;
         }
 
