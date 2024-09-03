@@ -77,7 +77,6 @@ export function typewrite(element, messages) {
     function start() {
         const isDoneDisplayingAllMessages = messages.length - 1 === state.messageIndex;
         if (state.isDoneTyping && isDoneDisplayingAllMessages) {
-            console.log('done');
             element.dispatchEvent(new Event('typewrite:done'));
             return;
         }

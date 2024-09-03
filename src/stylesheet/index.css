@@ -8,24 +8,14 @@ body {
     color: var(--color-fg);
 }
 
-#coming-soon {
+#root {
     margin-top: 20vh;
 }
 
-h1 {
-    text-align: center;
-    font-weight: lighter;
+hobo-type {
+    justify-content: center;
+    display: flex;
 }
-
-
-p {
-    text-align: center;
-}
-
-p:empty:before {
-    content: ' ';
-    white-space: pre;
-  }
 
 .italic {
     font-style: italic;

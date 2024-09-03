@@ -1,42 +1,50 @@
 import { random } from './script/random.mjs';
 import { hypeMessages } from './script/hypeMessages.mjs';
-import { typewrite } from './script/typewrite.mjs';
 import './script/theme.mjs';
-
 
 const randomHype = hypeMessages[random(0, hypeMessages.length - 1)];
 
-const heading = document.getElementById('heading');
-const hype = document.getElementById('hype');
-const slogan = document.getElementById('slogan');
+const createTypewriter = (messages) => {
+    const element = document.createElement('hobo-type');
+    element.messages = messages;
 
-function printHeading(element) {
+    return element;
+}
+
+const attachElement = (element) => {
+    const root = document.getElementById('root');
+    root.appendChild(element);
+}
+
+
+function printHeading() {
     const { heading } = randomHype;
-    typewrite(element, [heading]);
 
-    return new Promise((resolve) => {
-        element.addEventListener('typewrite:done', resolve);
-    });
+    const element = createTypewriter([heading]);
+    element.setAttribute('tag', 'h1');
+
+    attachElement(element);
+
+    return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
 }
 
-function printMessages(element) {
+function printMessages() {
     const { messages } = randomHype;
-    typewrite(element, messages);
 
-    return new Promise((resolve) => {
-        element.addEventListener('typewrite:done', resolve);
-    });
+    const element = createTypewriter(messages);
+    attachElement(element);
+
+    return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
 }
 
-function printSlogan(element) {
+function printSlogan() {
     const { slogan } = randomHype;
-    typewrite(element, [slogan]);
+    const element = createTypewriter([slogan]);
+    attachElement(element);
 
-    return new Promise((resolve) => {
-        element.addEventListener('typewrite:done', resolve);
-    });
+    return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
 }
 
-await printHeading(heading);
-await printMessages(hype)
-await printSlogan(slogan);
+await printHeading();
+await printMessages()
+await printSlogan();
