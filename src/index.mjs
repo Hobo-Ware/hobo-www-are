@@ -12,7 +12,7 @@ const slogan = document.getElementById('slogan');
 
 function printHeading(element) {
     const { heading } = randomHype;
-    typewrite(element, [heading], { nextMessageDelay: 1500 });
+    typewrite(element, [heading]);
 
     return new Promise((resolve) => {
         element.addEventListener('typewrite:done', resolve);
@@ -21,7 +21,7 @@ function printHeading(element) {
 
 function printMessages(element) {
     const { messages } = randomHype;
-    typewrite(element, messages, { nextMessageDelay: 4000 });
+    typewrite(element, messages);
 
     return new Promise((resolve) => {
         element.addEventListener('typewrite:done', resolve);

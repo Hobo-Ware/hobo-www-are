@@ -1,10 +1,17 @@
-export function typewrite(element, messages, options = {}) {
-    const {
-        nextMessageDelay = 4500,
-        characterTypeDelay = 1000 / 30,
-        characterWipeDelay = 1000 / 60,
-    } = options;
+const CHARACTER_TYPE_DELAY = 1000 / 30;
+const CHARACTER_WIPE_DELAY = 1000 / 60;
 
+function readTime(word) {
+    const wpm = 180;
+    const words = word.split(' ').length;
+    const time = (words / wpm) * 60 * 1000;
+
+    const buffer = CHARACTER_TYPE_DELAY * word.length * 1.5;
+
+    return time + buffer;
+}
+
+export function typewrite(element, messages) {
     const state = {
         messageIndex: 0,
         characterIndex: 0,
@@ -32,7 +39,7 @@ export function typewrite(element, messages, options = {}) {
             state.messageIndex += 1;
         }
 
-        if (elapsedCharacterWipingTime > characterWipeDelay && isWipingCharacter) {
+        if (elapsedCharacterWipingTime > CHARACTER_WIPE_DELAY && isWipingCharacter) {
             element.textContent = message.slice(0, state.characterIndex - 1);
             state.characterIndex--;
             state.characterWipeTime = currentTime;
@@ -53,13 +60,13 @@ export function typewrite(element, messages, options = {}) {
         const elapsedCharacterPrintingTime = currentTime - state.characterPrintTime;
         const elapsedMessagePritingTime = currentTime - state.messageQueueTime;
 
-        if (elapsedCharacterPrintingTime > characterTypeDelay && isPrintingCharacter) {
+        if (elapsedCharacterPrintingTime > CHARACTER_TYPE_DELAY && isPrintingCharacter) {
             element.textContent += message.charAt(state.characterIndex);
             state.characterIndex++;
             state.characterPrintTime = currentTime;
         }
 
-        if (!isPrintingCharacter && elapsedMessagePritingTime >= nextMessageDelay) {
+        if (!isPrintingCharacter && elapsedMessagePritingTime >= readTime(message)) {
             state.isDoneTyping = true;
             state.messageQueueTime = currentTime;
         }
