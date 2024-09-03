@@ -4,9 +4,17 @@ import './script/theme.mjs';
 
 const randomHype = hypeMessages[random(0, hypeMessages.length - 1)];
 
-const createTypewriter = (messages) => {
+const createTypewriter = (content) => {
     const element = document.createElement('hobo-type');
-    element.messages = messages;
+    const isArray = Array.isArray(content);
+
+    if (isArray) {
+        element.messages = content;
+    }
+
+    if (!isArray) {
+        element.textContent = content;
+    }
 
     return element;
 }
@@ -20,7 +28,7 @@ const attachElement = (element) => {
 function printHeading() {
     const { heading } = randomHype;
 
-    const element = createTypewriter([heading]);
+    const element = createTypewriter(heading);
     element.setAttribute('tag', 'h1');
 
     attachElement(element);
@@ -39,7 +47,7 @@ function printMessages() {
 
 function printSlogan() {
     const { slogan } = randomHype;
-    const element = createTypewriter([slogan]);
+    const element = createTypewriter(slogan);
     attachElement(element);
 
     return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
