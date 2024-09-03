@@ -47,7 +47,7 @@ export default class TypewriterParagraph extends HTMLElement {
     get messages() {
         return Object.freeze(this.#messages);
     }
-        
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -69,19 +69,23 @@ export default class TypewriterParagraph extends HTMLElement {
 
         const textElement = document.createElement(tagName);
 
-        const maxWidth = Math.max(
-            ...messages.map(message => {
-                const clone = textElement.cloneNode();
-                clone.textContent = message;
+        const getWidthForText = (text) => {
+            const clone = textElement.cloneNode();
+            clone.style.width = '';
+            clone.textContent = text;
 
-                return parseFloat(computeWidth({
-                    root: this.shadowRoot,
-                    element: clone,
-                }));
-            })
-        );
+            return computeWidth({
+                root: this.shadowRoot,
+                element: clone,
+            });
+        }
 
-        textElement.style.width = `${maxWidth}px`;
+        textElement.style.width = getWidthForText(messages[0]);
+
+        textElement.addEventListener('typewrite:next', (event) => {
+            const { message } = event.detail;
+            textElement.style.width = getWidthForText(message);
+        });
 
         textElement.addEventListener('typewrite:done', () => {
             this.dispatchEvent(new CustomEvent('typewrite:done'));

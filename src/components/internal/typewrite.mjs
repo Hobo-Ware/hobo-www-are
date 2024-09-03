@@ -37,6 +37,11 @@ export function typewrite(element, messages) {
             state.isDoneTyping = false;
             state.characterWipeTime = 0;
             state.messageIndex += 1;
+            element.dispatchEvent(new CustomEvent('typewrite:next', {
+                detail: {
+                    message: messages[state.messageIndex],
+                }
+            }));
         }
 
         if (elapsedCharacterWipingTime > CHARACTER_WIPE_DELAY && isWipingCharacter) {
