@@ -12,13 +12,13 @@ const THEME_ATTRIBUTE = 'data-theme';
 const WRAPPER_SELECTOR = ':root';
 const LOCAL_STORAGE_KEY = 'theme';
 
-function setTheme(theme) {
+function set(theme) {
     const wrapper = document.querySelector(WRAPPER_SELECTOR);
     wrapper.setAttribute(THEME_ATTRIBUTE, theme);
     localStorage.setItem(LOCAL_STORAGE_KEY, theme);
 }
 
-function resolveTheme() {
+export function resolve() {
     const darkThemeMatcher = window.matchMedia('(prefers-color-scheme: dark)');
     const systemPreference = darkThemeMatcher.matches
         ? Theme.Dark
@@ -35,18 +35,22 @@ function resolveTheme() {
     return storedTheme ?? systemPreference;
 }
 
-function toggleTheme() {
+function toggle() {
     const theme = document.querySelector(WRAPPER_SELECTOR).getAttribute(THEME_ATTRIBUTE);
     const toggledTheme = THEME_SWITCH_MAP[theme];
-    setTheme(toggledTheme);
+    set(toggledTheme);
 };
 
-function initializeTheme() {
-    const theme = resolveTheme();
-    setTheme(theme);
+function initialize() {
+    const theme = resolve();
+    set(theme);
 
     const toggleButton = document.querySelector('.js__theme-mode-toggle');
-    toggleButton.addEventListener('click', toggleTheme);
+    toggleButton.addEventListener('click', toggle);
 }
 
-initializeTheme();
+export default {
+    resolve,
+    toggle,
+    set,
+}
