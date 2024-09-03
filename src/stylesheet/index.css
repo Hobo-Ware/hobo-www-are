@@ -12,7 +12,7 @@ body {
     margin-top: 20vh;
 }
 
-hobo-type {
+hobo-type, hobo-wave {
     justify-content: center;
     display: flex;
 }
