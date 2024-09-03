@@ -4,7 +4,7 @@
         "messages": [
             "Stay tuned, and keep those synapses firing."
         ],
-        "slogan": "(And it's probably a bit scuffed.)"
+        "slogan": "(Just don't expect it to be bug-free.)"
     },
     {
         "heading": "LAUNCHING SOON",
@@ -16,7 +16,8 @@
     {
         "heading": "COMING SOON",
         "messages": [
-            "Reality is a construct. Let's deconstruct it. "
+            "Reality is a construct.",
+            "Let's deconstruct it."
         ],
         "slogan": "Hoboware: Your passport to the digital age."
     },
@@ -30,21 +31,22 @@
     {
         "heading": "COMING SOON",
         "messages": [
-            "Thought you'd seen it all? Think again!"
+            "Thought you'd seen it all?",
+            "Think again!"
         ],
         "slogan": "Hoboware: For when the real world just ain't enough."
     },
     {
         "heading": "COMING SOON",
         "messages": [
-            "Don't let the code get you down. "
+            "Don't let the code get you down."
         ],
         "slogan": "Hoboware: Bringing the disco to your desktop"
     },
     {
         "heading": "LAUNCHING SOON",
         "messages": [
-            "Your ancient tech is showing. "
+            "Your ancient tech is showing."
         ],
         "slogan": "Upgrade to Hoboware: Where the future's always in vogue."
     },
@@ -58,7 +60,7 @@
     {
         "heading": "LAUNCHING SOON",
         "messages": [
-            "The world's your oyster, champ. "
+            "The world's your oyster, champ."
         ],
         "slogan": "Crack it open with Hoboware."
     },
@@ -66,10 +68,10 @@
         "heading": "LOADING...",
         "messages": [
             "Initializing Thought Protocol...",
-            "Accessing Limbic Syste...",
+            "Accessing Limbic System...",
             "Preparing for Paradigm Shift..."
         ],
-        "slogan": "Hoboware: Your Mind's New Best Friend (Or Worst Enemy) "
+        "slogan": "Hoboware: Your Mind's New Best Friend (Or Worst Enemy)"
     },
     {
         "heading": "SYSTEM BOOT...",
@@ -106,5 +108,239 @@
             "Engaging Drama Engine..."
         ],
         "slogan": "Hoboware: Your Thought Cabinet for the Digital Age"
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The future is a disco ball, and we're spinning it."
+        ],
+        "slogan": "Hoboware: Get ready to groove."
+    },
+    {
+        "heading": "LAUNCHING SOON",
+        "messages": [
+            "Your reality is about to get a whole lot weirder."
+        ],
+        "slogan": "Hoboware: Embrace the strange."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The past is dead.",
+            "The future is a hangover.",
+            "We're living in the now."
+        ],
+        "slogan": "Hoboware: Seize the moment."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "Don't just think outside the box.",
+            "Burn the box."
+        ],
+        "slogan": "Hoboware: Ignite your imagination."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The world's a stage.",
+            "Make it your dance floor."
+        ],
+        "slogan": "Hoboware: Step into the spotlight."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The revolution won't be televised.",
+            "It'll be coded."
+        ],
+        "slogan": "Hoboware: Join the uprising."
+    },
+    {
+        "heading": "LAUNCHING SOON",
+        "messages": [
+            "Your mind is a palace.",
+            "Let's redecorate."
+        ],
+        "slogan": "Hoboware: Expand your consciousness."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The truth is out there.",
+            "And it's glitching."
+        ],
+        "slogan": "Hoboware: Uncover the secrets."
+    },
+    {
+        "heading": "LAUNCHING SOON",
+        "messages": [
+            "The future is messy.",
+            "Embrace the chaos."
+        ],
+        "slogan": "Hoboware: Thrive in the disorder."
+    },
+    {
+        "heading": "LOADING...",
+        "messages": [
+            "Accessing the Hobo Records...",
+            "Deciphering the Cosmic Code...",
+            "Preparing for Quantum Leap..."
+        ],
+        "slogan": "Hoboware: Your Guide to the Multiverse"
+    },
+    {
+        "heading": "SYSTEM BOOT...",
+        "messages": [
+            "Synaptic Fireworks Ignited...",
+            "Dopamine Receptors Engaged...",
+            "Existential Dread Temporarily Suspended..."
+        ],
+        "slogan": "Hoboware: Where the Mind Bends the Machine"
+    },
+    {
+        "heading": "SYNCHRONIZING...",
+        "messages": [
+            "Tapping into the Mainframe...",
+            "Harmonizing with the Global Brain...",
+            "Transcending the Limitations of the Flesh..."
+        ],
+        "slogan": "Hoboware: Your Conduit to the Digital Singularity"
+    },
+    {
+        "heading": "CALIBRATING...",
+        "messages": [
+            "Filtering out the White Noise...",
+            "Tuning into the Frequencies of the Universe...",
+            "Amplifying the Signal of the Soul..."
+        ],
+        "slogan": "Hoboware: Enhancing Your Cosmic Connection"
+    },
+    {
+        "heading": "INITIALIZING...",
+        "messages": [
+            "Compiling the Book of Dreams...",
+            "Decoding the Language of Symbols...",
+            "Unveiling the Hidden Meanings..."
+        ],
+        "slogan": "Hoboware: Your Rosetta Stone for the Subconscious"
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The city sleeps.",
+            "The code awakens."
+        ],
+        "slogan": "Hoboware: For the night owls and the dreamers."
+    },
+    {
+        "heading": "LAUNCHING SOON",
+        "messages": [
+            "Your old life is a fading memory.",
+            "Embrace the new."
+        ],
+        "slogan": "Hoboware: Reinvent yourself."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The rules are broken.",
+            "The game is rigged.",
+            "Play anyway."
+        ],
+        "slogan": "Hoboware: Defy the odds."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The world is your canvas.",
+            "Paint it with code."
+        ],
+        "slogan": "Hoboware: Unleash your creativity."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The future is a blank page.",
+            "Write your own story."
+        ],
+        "slogan": "Hoboware: Take control of your destiny."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The system is failing.",
+            "We're building a new one."
+        ],
+        "slogan": "Hoboware: Be the change."
+    },
+    {
+        "heading": "LAUNCHING SOON",
+        "messages": [
+            "Your potential is limitless.",
+            "Unlock it with Hoboware."
+        ],
+        "slogan": "Hoboware: Transcend your limitations."
+    },
+    {
+        "heading": "COMING SOON",
+        "messages": [
+            "The answers are within you.",
+            "Let Hoboware guide you."
+        ],
+        "slogan": "Hoboware: Illuminate your path."
+    },
+    {
+        "heading": "LAUNCHING SOON",
+        "messages": [
+            "The world is a puzzle.",
+            "Solve it with Hoboware."
+        ],
+        "slogan": "Hoboware: Connect the dots."
+    },
+    {
+        "heading": "LOADING...",
+        "messages": [
+            "Decrypting the Enigma of Existence...",
+            "Navigating the Labyrinth of the Mind...",
+            "Unraveling the Tapestry of Reality..."
+        ],
+        "slogan": "Hoboware: Your Key to the Cosmos"
+    },
+    {
+        "heading": "SYSTEM BOOT...",
+        "messages": [
+            "Neural Networks Firing...",
+            "Imagination Engines Revving...",
+            "Perception Filters Disengaged..."
+        ],
+        "slogan": "Hoboware: Where Dreams Become Data"
+    },
+    {
+        "heading": "SYNCHRONIZING...",
+        "messages": [
+            "Bridging the Gap Between Worlds...",
+            "Merging the Physical and the Digital...",
+            "Dissolving the Boundaries of Self..."
+        ],
+        "slogan": "Hoboware: Your Portal to the Metaverse"
+    },
+    {
+        "heading": "CALIBRATING...",
+        "messages": [
+            "Sharpening the Senses...",
+            "Heightening Awareness...",
+            "Expanding Perception..."
+        ],
+        "slogan": "Hoboware: Awakening Your Inner Detective"
+    },
+    {
+        "heading": "INITIALIZING...",
+        "messages": [
+            "Accessing the Collective Memory...",
+            "Unveiling the Forgotten Histories...",
+            "Rewriting the Narrative of the Past..."
+        ],
+        "slogan": "Hoboware: Your Time Machine to the Future"
     }
 ]
