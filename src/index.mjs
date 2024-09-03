@@ -8,7 +8,7 @@ const randomHype = hypeMessages[random(0, hypeMessages.length - 1)];
 
 const heading = document.getElementById('heading');
 const hype = document.getElementById('hype');
-const outro = document.getElementById('outro');
+const slogan = document.getElementById('slogan');
 
 function printHeading(element) {
     const { heading } = randomHype;
@@ -28,9 +28,9 @@ function printMessages(element) {
     });
 }
 
-function printOutro(element) {
-    const { outro } = randomHype;
-    typewrite(element, [outro]);
+function printSlogan(element) {
+    const { slogan } = randomHype;
+    typewrite(element, [slogan]);
 
     return new Promise((resolve) => {
         element.addEventListener('typewrite:done', resolve);
@@ -39,4 +39,4 @@ function printOutro(element) {
 
 await printHeading(heading);
 await printMessages(hype)
-await printOutro(outro);
+await printSlogan(slogan);

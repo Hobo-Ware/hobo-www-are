@@ -4,63 +4,63 @@
         "messages": [
             "Stay tuned, and keep those synapses firing."
         ],
-        "outro": "(And it's probably a bit scuffed.)"
+        "slogan": "(And it's probably a bit scuffed.)"
     },
     {
         "heading": "LAUNCHING SOON",
         "messages": [
             "Need a digital fix? We got your remedy."
         ],
-        "outro": "Hoboware: Tools for the discerning degenerate. "
+        "slogan": "Hoboware: Tools for the discerning degenerate. "
     },
     {
         "heading": "COMING SOON",
         "messages": [
             "Reality is a construct. Let's deconstruct it. "
         ],
-        "outro": "Hoboware: Your passport to the digital age."
+        "slogan": "Hoboware: Your passport to the digital age."
     },
     {
         "heading": "COMING SOON",
         "messages": [
             "The future's so bright, you gotta wear shades."
         ],
-        "outro": "(Even if they're broken.)"
+        "slogan": "(Even if they're broken.)"
     },
     {
         "heading": "COMING SOON",
         "messages": [
             "Thought you'd seen it all? Think again!"
         ],
-        "outro": "Hoboware: For when the real world just ain't enough."
+        "slogan": "Hoboware: For when the real world just ain't enough."
     },
     {
         "heading": "COMING SOON",
         "messages": [
             "Don't let the code get you down. "
         ],
-        "outro": "Hoboware: Bringing the disco to your desktop"
+        "slogan": "Hoboware: Bringing the disco to your desktop"
     },
     {
         "heading": "LAUNCHING SOON",
         "messages": [
             "Your ancient tech is showing. "
         ],
-        "outro": "Upgrade to Hoboware: Where the future's always in vogue."
+        "slogan": "Upgrade to Hoboware: Where the future's always in vogue."
     },
     {
         "heading": "COMING SOON",
         "messages": [
             "Ready to face the music?"
         ],
-        "outro": "Hoboware: Your soundtrack to the digital age."
+        "slogan": "Hoboware: Your soundtrack to the digital age."
     },
     {
         "heading": "LAUNCHING SOON",
         "messages": [
             "The world's your oyster, champ. "
         ],
-        "outro": "Crack it open with Hoboware."
+        "slogan": "Crack it open with Hoboware."
     },
     {
         "heading": "LOADING...",
@@ -69,7 +69,7 @@
             "Accessing Limbic Syste...",
             "Preparing for Paradigm Shift..."
         ],
-        "outro": "Hoboware: Your Mind's New Best Friend (Or Worst Enemy) "
+        "slogan": "Hoboware: Your Mind's New Best Friend (Or Worst Enemy) "
     },
     {
         "heading": "SYSTEM BOOT...",
@@ -78,7 +78,7 @@
             "Neural Pathways Activated...",
             "Reality Check Bypassed..."
         ],
-        "outro": "Hoboware: Where the Code Meets the Pixel"
+        "slogan": "Hoboware: Where the Code Meets the Pixel"
     },
     {
         "heading": "SYNCHRONIZING...",
@@ -87,7 +87,7 @@
             "Interfacing with the Collective Unconscious...",
             "Expanding Consciousness Parameters..."
         ],
-        "outro": "Hoboware: Your Gateway to the digital age."
+        "slogan": "Hoboware: Your Gateway to the digital age."
     },
     {
         "heading": "CALIBRATING...",
@@ -96,7 +96,7 @@
             "Compensating for digital sprites...",
             "Amplifying visual calculus..."
         ],
-        "outro": "Hoboware: Enhancing Your Disco Potential"
+        "slogan": "Hoboware: Enhancing Your Disco Potential"
     },
     {
         "heading": "INITIALIZING...",
@@ -105,6 +105,6 @@
             "Accessing Encyclopedia Database...",
             "Engaging Drama Engine..."
         ],
-        "outro": "Hoboware: Your Thought Cabinet for the Digital Age"
+        "slogan": "Hoboware: Your Thought Cabinet for the Digital Age"
     }
 ]
