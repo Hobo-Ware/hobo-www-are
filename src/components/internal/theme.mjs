@@ -14,6 +14,14 @@ const LOCAL_STORAGE_KEY = 'theme';
 
 function set(theme) {
     const wrapper = document.querySelector(WRAPPER_SELECTOR);
+    document.querySelectorAll(['link[rel="icon"]', 'link[rel="apple-touch-icon"]'])
+        .forEach((link) => {
+            link.href = link
+                .href
+                .replace('/light/', `/${theme}/`)
+                .replace('/dark/', `/${theme}/`);
+        });
+
     wrapper.setAttribute(THEME_ATTRIBUTE, theme);
     localStorage.setItem(LOCAL_STORAGE_KEY, theme);
 }
@@ -40,14 +48,6 @@ function toggle() {
     const toggledTheme = THEME_SWITCH_MAP[theme];
     set(toggledTheme);
 };
-
-function initialize() {
-    const theme = resolve();
-    set(theme);
-
-    const toggleButton = document.querySelector('.js__theme-mode-toggle');
-    toggleButton.addEventListener('click', toggle);
-}
 
 export default {
     resolve,
