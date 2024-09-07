@@ -5,7 +5,7 @@ body {
     color: var(--color-fg);
 
     display: grid;
-    grid-template-rows: 25vw auto 60px;
+    grid-template-rows: max(25vw, 10em) auto 0.1fr;
 
     /* Adjust heights as needed */
     grid-template-columns: 1fr;
