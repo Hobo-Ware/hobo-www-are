@@ -15,7 +15,7 @@ const STYLE = `
         cursor: pointer;
         overflow: hidden;
         border-radius: 0.75rem;
-        border: .15rem solid var(--inactive);
+        border: .15rem solid var(--color-fg);
     }
 
     .theme-mode-toggle:focus,
@@ -34,7 +34,7 @@ const STYLE = `
 
     .theme-mode-toggle__icon {
         display: block;
-        background: var(--inactive);
+        background: var(--color-fg);
         border-radius: 50%;
         width: 1.5rem;
         height: 1.5rem;
@@ -61,23 +61,23 @@ const STYLE = `
         animation: spin__rays 4s linear infinite;
         background-image: linear-gradient(0deg,
                 transparent 46%,
-                var(--inactive) 46%,
-                var(--inactive) 54%,
+                var(--color-fg); 46%,
+                var(--color-fg); 54%,
                 transparent 54%),
             linear-gradient(90deg,
                 transparent 46%,
-                var(--inactive) 46%,
-                var(--inactive) 54%,
+                var(--color-fg); 46%,
+                var(--color-fg); 54%,
                 transparent 54%),
             linear-gradient(45deg,
                 transparent 47%,
-                var(--inactive) 47%,
-                var(--inactive) 53%,
+                var(--color-fg); 47%,
+                var(--color-fg); 53%,
                 transparent 53%),
             linear-gradient(135deg,
                 transparent 47%,
-                var(--inactive) 47%,
-                var(--inactive) 53%,
+                var(--color-fg); 47%,
+                var(--color-fg); 53%,
                 transparent 53%);
     }
 
