@@ -1,17 +1,19 @@
 :root {
     --theme: light;
-    --inactive: #bdc3c7;
 
-    --primary: #848ccf;
-    --color-bg: #F8F4EE;
-    --color-fg: #302E2C;
+    --primary: #fa1d3c;
+    --color-bg: #dcdde2;
+    --color-fg: #202128;
+
+    --color-bg-80: #1a1c28;
+    --color-bg-60: #333542;
+    --color-bg-40: #797c8b;
+    --color-bg-20: #aeb2c6;
 }
 
 :root[data-theme='dark'] {
     --theme: dark;
-    --inactive: #e8ecf1;
 
-    --color-bg: #2D2D2D;
-    --color-fg: #EFEBE9;
-    --primary: #fbc093;
+    --color-bg: #202128;
+    --color-fg: #dcdde2;
 }
