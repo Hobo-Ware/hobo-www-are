@@ -13,7 +13,7 @@ body {
         "header"
         "content"
         "footer";
-    height: 100vh;
+    height: 100svh;
 
     /* Ensure the grid takes up full viewport height */
     padding: 0;
