@@ -4,6 +4,7 @@ function createTextStyle(tagName) {
     const tagStyle = document.createElement('style');
 
     tagStyle.textContent = `
+    
         ${tagName}:empty:before {
             content: ' ';
             white-space: pre;
@@ -62,6 +63,7 @@ export default class TypewriterParagraph extends HTMLElement {
         const style = document.createElement('style');
         style.textContent = `
             :host {
+                user-select: none;
                 display: block;
             }
         `;

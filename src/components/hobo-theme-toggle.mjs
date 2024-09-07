@@ -12,6 +12,7 @@ export default class HoboThemeToggle extends HTMLElement {
         const style = document.createElement('style');
         style.textContent = `
             :host {
+                user-select: none;
                 width: 2em;
                 height: 2em;
                 display: inline-block;
