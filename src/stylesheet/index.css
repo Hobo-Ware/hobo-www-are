@@ -1,11 +1,49 @@
 html,
 body {
-    background-color: var(--color-bg);
-    margin: 0;
-    padding: 0;
     font-family: 'Roboto', sans-serif;
-    line-height: 1.5;
+    background-color: var(--color-bg);
     color: var(--color-fg);
+
+    display: grid;
+    grid-template-rows: 25vw auto 60px;
+
+    /* Adjust heights as needed */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "header"
+        "content"
+        "footer";
+    height: 100vh;
+
+    /* Ensure the grid takes up full viewport height */
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    grid-area: header;
+    
+    display: flex;
+    width: 100%;
+
+    align-items: center;
+    justify-content: center;
+}
+
+header hobo-logo {
+    position: relative;
+    width: 25vw;
+    min-width: 10em;
+    margin: 0;
+}
+
+main {
+    grid-area: content;
+}
+
+footer {
+    grid-area: footer;
+    text-align: center;
 }
 
 hobo-theme-toggle {
@@ -17,15 +55,10 @@ hobo-theme-toggle {
     top: 0;
 }
 
-#root {
-    margin-top: 20vh;
-}
 
-hobo-type, hobo-wave {
+
+hobo-type,
+hobo-wave {
     justify-content: center;
     display: flex;
-}
-
-.italic {
-    font-style: italic;
 }
