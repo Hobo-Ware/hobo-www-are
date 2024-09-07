@@ -3,6 +3,7 @@ body {
     font-family: 'Biryani', sans-serif;
     background-color: var(--color-bg);
     color: var(--color-fg);
+    transition: color cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s, background-color cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 
     display: grid;
     grid-template-rows: max(25vw, 10em) auto 0.1fr;
@@ -22,7 +23,7 @@ body {
 
 header {
     grid-area: header;
-    
+
     display: flex;
     width: 100%;
 
