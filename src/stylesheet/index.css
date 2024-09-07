@@ -8,6 +8,15 @@ body {
     color: var(--color-fg);
 }
 
+hobo-theme-toggle {
+    position: fixed;
+    width: 3em;
+    height: 3em;
+    padding: 1em;
+    right: 0;
+    top: 0;
+}
+
 #root {
     margin-top: 20vh;
 }
