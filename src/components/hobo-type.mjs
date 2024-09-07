@@ -79,7 +79,9 @@ export default class TypewriterParagraph extends HTMLElement {
 
         const getWidthForText = (text) => {
             const clone = textElement.cloneNode();
-            clone.style.width = '';
+            clone.style.width = 'fit-content';
+            clone.style.position = 'absolute';
+            clone.style.opacity = 0;
             clone.textContent = text;
 
             return computeWidth({
@@ -88,11 +90,25 @@ export default class TypewriterParagraph extends HTMLElement {
             });
         }
 
-        textElement.style.width = getWidthForText(messages[0]);
+        const assignWidth = (text) =>
+            requestAnimationFrame(() => {
+                textElement.style.width = getWidthForText(text);
+            });
+
+        const observeTextAndAssignWidth = (text) => {
+            const observer = new ResizeObserver(() => assignWidth(text));
+            observer.observe(textElement);
+
+            return observer;
+        };
+
+        const observer = observeTextAndAssignWidth(messages[0]);
 
         textElement.addEventListener('typewrite:next', (event) => {
             const { message } = event.detail;
-            textElement.style.width = getWidthForText(message);
+            observer.disconnect();
+
+            observeTextAndAssignWidth(message);
         });
 
         textElement.addEventListener('typewrite:done', () => {
