@@ -11,6 +11,14 @@ function createTextStyle(tagName) {
         
         ${tagName} {
             width: fit-content;
+            size: 1em;        
+        }
+
+        @media (max-width: 480px) {
+            ${tagName} {
+                width: fit-content;
+                font-size: .75em;
+            }
         }
     `;
 
