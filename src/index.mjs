@@ -34,18 +34,6 @@ const removeElement = (element) => {
 }
 
 
-function printHeading() {
-    const { heading } = randomHype;
-
-    const element = createTypewriter(heading);
-    element.setAttribute('tag', 'h1');
-
-    attachElement(element);
-    attachElement(hoboWaveElement);
-
-    return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
-}
-
 function printMessages() {
     const { messages } = randomHype;
 
@@ -65,6 +53,5 @@ function printSlogan() {
     return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
 }
 
-await printHeading();
 await printMessages()
 await printSlogan();
