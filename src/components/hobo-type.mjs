@@ -4,7 +4,6 @@ function createTextStyle(tagName) {
     const tagStyle = document.createElement('style');
 
     tagStyle.textContent = `
-    
         ${tagName}:empty:before {
             content: ' ';
             white-space: pre;
@@ -12,14 +11,8 @@ function createTextStyle(tagName) {
         
         ${tagName} {
             width: fit-content;
-            size: 1em;        
-        }
-
-        @media (max-width: 480px) {
-            ${tagName} {
-                width: fit-content;
-                font-size: .75em;
-            }
+            size: 1em;
+            margin: 0;
         }
     `;
 

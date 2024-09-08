@@ -17,8 +17,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Biryani:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="stylesheet/theme.css" />
     <link rel="stylesheet" href="stylesheet/index.css" />
@@ -35,7 +34,37 @@
     </header>
 
     <main>
-        <section id="root">
+        <section id="hobo-void">
+            <hobo-wave dot-count="3" animation-duration="1"></hobo-wave>
+            <hobo-wave dot-count="3" animation-duration="1"></hobo-wave>
+        </section>
+
+        <section id="hobo-founders">
+            <div class="hobo-founder hobo-vlad">
+                <picture>
+                    <source media="(max-width: 480px)" srcset="assets/vlad/vlad_200.png" />
+                    <source media="(max-width: 768px)" srcset="assets/vlad/vlad_400.png" />
+                    <img srcset="assets/vlad/vlad_600.png" />
+                </picture>
+                <section class="hobo-founder-description">
+                    <h2>Vlad</h2>
+                    <p>Entropy Management Engineer</p>
+                    <span>Specializes in controlling chaos and decay, both in systems and society.</span>
+                </section>
+            </div>
+
+            <div class="hobo-founder hobo-sefer">
+                <picture>
+                    <source media="(max-width: 480px)" srcset="assets/sefer/sefer_200.png" />
+                    <source media="(max-width: 768px)" srcset="assets/sefer/sefer_400.png" />
+                    <img srcset="assets/sefer/sefer_600.png" />
+                </picture>
+                <section class="hobo-founder-description">
+                    <h2>Sefer</h2>
+                    <p>Existential Glitch Debugger</p>
+                    <span>Fixes the fundamental flaws in the fabric of reality, or at least tries to.</span>
+                </section>
+            </div>
         </section>
     </main>
 

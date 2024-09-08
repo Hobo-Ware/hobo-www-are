@@ -1,3 +1,8 @@
+:root {
+    --logo-size: min(20vh, 15vw);
+    --logo-size-min: 10em;
+}
+
 html,
 body {
     font-family: 'Biryani', sans-serif;
@@ -6,7 +11,7 @@ body {
     transition: color cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s, background-color cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 
     display: grid;
-    grid-template-rows: max(25vw, 10em) auto 0.1fr;
+    grid-template-rows: max(var(--logo-size), var(--logo-size-min)) auto 0.1fr;
 
     /* Adjust heights as needed */
     grid-template-columns: 1fr;
@@ -33,7 +38,7 @@ header {
 
 header hobo-logo {
     position: relative;
-    width: 25vw;
+    width: var(--logo-size);
     min-width: 10em;
     margin: 0;
 }
@@ -56,10 +61,120 @@ hobo-theme-toggle {
     top: 0;
 }
 
-
-
 hobo-type,
 hobo-wave {
     justify-content: center;
     display: flex;
+}
+
+#hobo-void {
+    padding: .5em 0;
+    line-height: 2;
+}
+
+#hobo-founders {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+
+    .hobo-founder {
+        display: flex;
+        flex-direction: column;
+        margin-top: -2em;
+
+        --founder-size: 20vw;
+
+        .hobo-founder-description {
+            line-height: 1.5;
+            margin-top: -2em;
+            width: var(--founder-size);
+
+            span {
+                display: inline-block;
+                margin-top: 0.5em;
+                font-size: 0.75em;
+                width: 75%;
+            }
+
+            p,
+            h2 {
+                margin: 0;
+            }
+        }
+
+        picture {
+            display: flex;
+
+            img {
+                width: var(--founder-size);
+            }
+        }
+
+        &.hobo-vlad {
+            align-items: flex-end;
+            text-align: left;
+
+            picture,
+            section {
+                justify-content: right;
+            }
+        }
+
+        &.hobo-sefer {
+            align-items: flex-start;
+            text-align: right;
+
+            picture,
+            section {
+                justify-content: left;
+            }
+        }
+    }
+
+    @media screen and (min-width: 1280px) {
+        .hobo-founder {
+            padding: 0 2em;
+        }
+    }
+
+    @media screen and (max-width: 1280px) {
+        .hobo-founder {
+            --founder-size: 30vw;
+
+            padding: 0 .5em;
+        }
+    }
+
+    @media screen and (max-width: 960px) {
+        .hobo-founder {
+            --founder-size: 45vw;
+
+            margin-top: -2em;
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        .hobo-founder {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+hobo-type,
+hobo-wave {
+    font-size: 0.8rem;
+}
+
+@media (max-width: 1280px) {
+    hobo-type,
+    hobo-wave {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 640px) {
+    hobo-type,
+    hobo-wave {
+        font-size: 0.6rem;
+    }
 }
