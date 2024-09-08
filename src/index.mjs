@@ -3,6 +3,8 @@ import { hypeMessages } from './script/hypeMessages.mjs';
 
 const randomHype = hypeMessages[random(0, hypeMessages.length - 1)];
 
+const root = document.getElementById('hobo-void');
+
 const hoboWaveElement = document.createElement('hobo-wave');
 hoboWaveElement.setAttribute('dot-count', 3);
 hoboWaveElement.setAttribute('dot-size', '1em');
@@ -24,12 +26,10 @@ const createTypewriter = (content) => {
 }
 
 const attachElement = (element) => {
-    const root = document.getElementById('root');
     root.appendChild(element);
 }
 
 const removeElement = (element) => {
-    const root = document.getElementById('root');
     root.removeChild(element);
 }
 
@@ -53,5 +53,6 @@ function printSlogan() {
     return new Promise((resolve) => element.addEventListener('typewrite:done', resolve));
 }
 
+root.innerHTML = '';
 await printMessages()
 await printSlogan();

@@ -12,7 +12,6 @@ class HoboWave extends HTMLElement {
         }
 
         const numDots = this.getAttribute('dot-count') || 5;
-        const dotSize = this.getAttribute('dot-size') || 10;
         const animationDuration = this.getAttribute('animation-duration') || 2;
 
         const container = document.createElement('div');
@@ -22,7 +21,6 @@ class HoboWave extends HTMLElement {
             const dot = document.createElement('div');
             dot.textContent = '.';
             dot.classList.add('dot');
-            dot.style.fontSize = dotSize;
             dot.style.animationDelay = `${i * 0.2}s`;
             container.appendChild(dot);
         }
