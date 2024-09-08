@@ -5,7 +5,7 @@ export class HoboLogo extends HTMLElement {
         const style = document.createElement('style');
         style.textContent = `
             :host {
-                display: inline-block;
+                display: flex;
                 width: 2em;
             }
 
