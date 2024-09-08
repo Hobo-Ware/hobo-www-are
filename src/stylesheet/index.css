@@ -78,11 +78,17 @@ hobo-wave {
     margin: 0;
 
     .hobo-founder {
+        --founder-size: 20vw;
+
         display: flex;
         flex-direction: column;
         margin-top: -2em;
 
-        --founder-size: 20vw;
+        filter: grayscale(100%);
+        &:hover {
+            filter: grayscale(0%);
+            transition: filter 0.5s;
+        }
 
         .hobo-founder-description {
             line-height: 1.5;
@@ -166,6 +172,7 @@ hobo-wave {
 }
 
 @media (max-width: 1280px) {
+
     hobo-type,
     hobo-wave {
         font-size: 0.75rem;
@@ -173,6 +180,7 @@ hobo-wave {
 }
 
 @media (max-width: 640px) {
+
     hobo-type,
     hobo-wave {
         font-size: 0.6rem;
