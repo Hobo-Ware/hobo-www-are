@@ -74,6 +74,8 @@ hobo-wave {
 }
 
 #hobo-founders {
+    z-index: 1;
+    
     display: flex;
     justify-content: center;
     margin: 0;
@@ -212,4 +214,12 @@ hobo-wave {
             margin-top: 0;
         }
     }
+}
+
+#hobo-footer {
+    z-index: 0;
+
+    position: fixed;
+    bottom: -12vw;
+    left: 0;
 }
