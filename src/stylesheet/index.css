@@ -2,6 +2,7 @@
     --logo-size: min(20vh, 15vw);
     --logo-size-min: 10em;
     --transition-duration: 0.5s;
+    --footer-move-duration: 10s;
 }
 
 html,
@@ -51,6 +52,9 @@ main {
 footer {
     grid-area: footer;
     text-align: center;
+    color: var(--color-bg);
+    pointer-events: none;
+    z-index: 1;
 }
 
 hobo-theme-toggle {
@@ -79,6 +83,7 @@ hobo-wave {
     margin: 0;
 
     .hobo-founder {
+        z-index: 1;
         --founder-size: 20vw;
 
         display: flex;
@@ -190,8 +195,66 @@ hobo-wave {
     font-size: 0.8rem;
 }
 
-@media (max-width: 1280px) {
+#hobo-footer {
+    z-index: 0;
+    position: fixed;
+    bottom: -0.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 101vw;
+    overflow: visible;
 
+    path {
+        --path-translation: 0.1px;
+        --path-rotation-start: 0deg;
+        --path-rotation-end: 360deg;
+        animation: move-footer-path var(--footer-move-duration) linear infinite;
+    }
+
+    path:nth-child(2) {
+        --path-translation: -0.1px;
+    }
+    
+    path:nth-child(3) {
+        --path-rotation-start: 360deg;
+        --path-rotation-end: 0deg;
+    }
+    
+    path:nth-child(4) {
+        --path-translation: -0.1px;
+        --path-rotation-start: 360deg;
+        --path-rotation-end: 0deg;
+    }
+
+    &:hover {
+        path {
+            animation-duration: 1s;
+        }
+    }
+}
+
+/*
+    -Initial rotation: rotate the element by a certain angle. This changes the coordinate system for the element.
+    -Translation: move the element along the X-axis in the new coordinate system.
+    -Counter-Rotation: rotate the element back by the same angle in the opposite direction.
+    -> This results in the element moving along a circular path instead of rotating the element itself
+*/
+@keyframes move-footer-path {
+    from {
+        transform:
+            rotate(var(--path-rotation-start))
+            translateX(var(--path-translation))
+            rotate(calc(-1 * var(--path-rotation-start)));
+    }
+    to {
+        transform:
+            rotate(var(--path-rotation-end))
+            translateX(var(--path-translation))
+            rotate(calc(-1 * var(--path-rotation-end)));
+    }
+}
+
+@media (max-width: 1280px) {
     hobo-type,
     hobo-wave {
         font-size: 0.75rem;
@@ -199,17 +262,40 @@ hobo-wave {
 }
 
 @media (max-width: 640px) {
-
     hobo-type,
     hobo-wave {
         font-size: 0.6rem;
     }
 }
 
-@media  (max-width: 480px) {
+@media (max-width: 480px) {
     #hobo-founders {
         .hobo-founder {
             margin-top: 0;
         }
+    }
+}
+
+@media (max-aspect-ratio: 4/5) {
+    #hobo-footer {
+        width: 200vw;
+    }
+}
+
+@media (min-aspect-ratio: 4/5) and (max-aspect-ratio: 3/2) {
+    #hobo-footer {
+        width: 115vw;
+    }
+}
+
+@media (min-aspect-ratio: 3/2) and (max-aspect-ratio: 2/1.1) {
+    #hobo-footer {
+        transform: translateX(-50%) translateY(15vh);
+    }
+}
+
+@media (min-aspect-ratio: 2/1.1) {
+    #hobo-footer {
+        transform: translateX(-50%) translateY(25vh);
     }
 }
