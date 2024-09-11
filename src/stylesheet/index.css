@@ -84,9 +84,12 @@ hobo-wave {
         flex-direction: column;
         margin-top: -2em;
 
-        filter: grayscale(100%);
-        transition: filter 0.3s;
-        &:hover {
+        picture {
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        &:hover picture {
             filter: grayscale(0%);
             transition: filter 0.5s;
         }
@@ -96,14 +99,21 @@ hobo-wave {
             margin-top: -1em;
             width: var(--founder-size);
 
-            span {
+            .hobo-founder-tagline {
+                display: flex;
+                align-items: center;
+                flex-direction: row;
+                gap: 0.25em;
+            }
+
+            p {
                 display: inline-block;
                 margin-top: 0.5em;
                 font-size: 0.75em;
                 width: 75%;
             }
 
-            p,
+            span,
             h2 {
                 margin: 0;
             }
@@ -121,6 +131,10 @@ hobo-wave {
             align-items: flex-end;
             text-align: left;
 
+            .hobo-founder-tagline {
+                justify-content: flex-start;
+            }
+
             picture,
             section {
                 justify-content: right;
@@ -130,6 +144,10 @@ hobo-wave {
         &.hobo-sefer {
             align-items: flex-start;
             text-align: right;
+
+            .hobo-founder-tagline {
+                justify-content: flex-end;
+            }
 
             picture,
             section {
@@ -163,6 +181,12 @@ hobo-wave {
     @media screen and (max-width: 640px) {
         .hobo-founder {
             font-size: 0.8rem;
+
+            .hobo-founder-description {
+                .hobo-founder-tagline {
+                    font-size: 0.7rem;
+                }
+            }
         }
     }
 }
