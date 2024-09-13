@@ -17,10 +17,7 @@ export class HoboLinkedIn extends HTMLElement {
         style.textContent = `
             svg {
                 height: 1.5em;
-            }
-
-            a {
-                display: flex;
+                display: block;
             }
 
             a:visited, a:link {
