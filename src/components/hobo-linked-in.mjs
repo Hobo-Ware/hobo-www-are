@@ -43,6 +43,7 @@ export class HoboLinkedIn extends HTMLElement {
 
         const link = document.createElement('a');
         link.setAttribute('href', href);
+        link.setAttribute('target', '_blank');
         link.append(svg);
 
         this.shadowRoot.append(style);
