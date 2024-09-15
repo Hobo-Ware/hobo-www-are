@@ -87,6 +87,7 @@ hobo-wave {
         picture {
             filter: grayscale(100%);
             transition: filter 0.3s;
+            user-select: none;
         }
 
         &:hover picture {
