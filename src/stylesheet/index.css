@@ -211,3 +211,11 @@ hobo-wave {
         font-size: 0.6rem;
     }
 }
+
+@media  (max-width: 480px) {
+    #hobo-founders {
+        .hobo-founder {
+            margin-top: 0;
+        }
+    }
+}
