@@ -1,6 +1,7 @@
 :root {
     --logo-size: min(20vh, 15vw);
     --logo-size-min: 10em;
+    --transition-duration: 0.5s;
 }
 
 html,
@@ -92,7 +93,7 @@ hobo-wave {
 
         &:hover hobo-picture {
             filter: grayscale(0%);
-            transition: filter 0.5s;
+            transition: filter var(--transition-duration);
         }
 
         .hobo-founder-description {
