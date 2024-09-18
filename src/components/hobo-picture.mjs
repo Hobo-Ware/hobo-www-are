@@ -25,6 +25,8 @@ export class HoboPicture extends HTMLElement {
         `;
 
         const picture = document.createElement('picture');
+        picture.addEventListener('contextmenu', e => e.preventDefault());
+
         const source480 = document.createElement('source');
         source480.setAttribute('media', '(max-width: 480px)');
         source480.setAttribute('srcset', `assets/${founder}/${founder}_200.png`);
