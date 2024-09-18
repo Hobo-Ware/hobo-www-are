@@ -31,6 +31,7 @@
     <script type="module" src="components/hobo-wave.mjs"></script>
     <script type="module" src="components/hobo-logo.mjs"></script>
     <script type="module" src="components/hobo-linked-in.mjs"></script>
+    <script type="module" src="components/hobo-picture.mjs"></script>
 </head>
 
 <body>
@@ -47,11 +48,7 @@
 
         <section id="hobo-founders">
             <div class="hobo-founder hobo-vlad">
-                <picture>
-                    <source media="(max-width: 480px)" srcset="assets/vlad/vlad_200.png" />
-                    <source media="(max-width: 768px)" srcset="assets/vlad/vlad_400.png" />
-                    <img srcset="assets/vlad/vlad_600.png" />
-                </picture>
+                <hobo-picture founder="vlad"></hobo-picture>
                 <section class="hobo-founder-description">
                     <h2>Vlad</h2>
                     <div class="hobo-founder-tagline">
@@ -63,11 +60,7 @@
             </div>
 
             <div class="hobo-founder hobo-sefer">
-                <picture>
-                    <source media="(max-width: 480px)" srcset="assets/sefer/sefer_200.png" />
-                    <source media="(max-width: 768px)" srcset="assets/sefer/sefer_400.png" />
-                    <img srcset="assets/sefer/sefer_600.png" />
-                </picture>
+                <hobo-picture founder="sefer"></hobo-picture>
                 <section class="hobo-founder-description">
                     <h2>Sefer</h2>
                     <div class="hobo-founder-tagline">
