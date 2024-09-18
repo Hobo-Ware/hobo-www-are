@@ -84,13 +84,13 @@ hobo-wave {
         flex-direction: column;
         margin-top: -2em;
 
-        picture {
+        hobo-picture {
             filter: grayscale(100%);
             transition: filter 0.3s;
             user-select: none;
         }
 
-        &:hover picture {
+        &:hover hobo-picture {
             filter: grayscale(0%);
             transition: filter 0.5s;
         }
@@ -120,14 +120,6 @@ hobo-wave {
             }
         }
 
-        picture {
-            display: flex;
-
-            img {
-                width: var(--founder-size);
-            }
-        }
-
         &.hobo-vlad {
             align-items: flex-end;
             text-align: left;
@@ -136,7 +128,7 @@ hobo-wave {
                 justify-content: flex-start;
             }
 
-            picture,
+            hobo-picture,
             section {
                 justify-content: right;
             }
@@ -150,7 +142,7 @@ hobo-wave {
                 justify-content: flex-end;
             }
 
-            picture,
+            hobo-picture,
             section {
                 justify-content: left;
             }
