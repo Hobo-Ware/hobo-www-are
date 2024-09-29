@@ -37,6 +37,7 @@ function createFounderPicture({
         fileName
     }) => {
         const source = document.createElement(element);
+        source.setAttribute('draggable', 'false');
 
         if (maxWidth) {
             source.setAttribute('media', `(max-width: ${maxWidth}px)`);
