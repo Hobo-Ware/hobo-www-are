@@ -18,12 +18,12 @@ function createFounderPicture({
 
     [
         {
-            element: 'media',
+            element: 'source',
             maxWidth: 480,
             fileName: `${assetName}_200.png`
         },
         {
-            element: 'media',
+            element: 'source',
             maxWidth: 768,
             fileName: `${assetName}_400.png`
         },
@@ -50,6 +50,60 @@ function createFounderPicture({
     return picture;
 }
 
+/**
+ * Retrieves the URL of the picture element based on the current media query match.
+ *
+ * @param {HTMLPictureElement} picture - The picture element containing source and img elements.
+ * @returns {string} - The URL of the matched source element or the img element.
+ */
+function getPictureUrl(picture) {
+    const sources = picture.querySelectorAll('source');
+    const image = Array.from(sources)
+        .find(source => {
+            const media = source.getAttribute('media');
+            const isMatch = window.matchMedia(media).matches;
+
+            return isMatch;
+        }) ?? picture.querySelector('img');
+
+    return image.srcset ?? image.src;
+}
+
+/**
+ * Creates a ripple effect on the specified element.
+ *
+ * @param {Object} params - The parameters for creating the ripple.
+ * @param {HTMLElement} params.element - The HTML element on which to create the ripple effect.
+ * @param {Object} params.offset - The offset of the element.
+ * @param {number} params.offset.left - The left offset of the element.
+ * @param {number} params.offset.top - The top offset of the element.
+ * @param {Object} params.cursor - The cursor position.
+ * @param {number} params.cursor.x - The x-coordinate of the cursor.
+ * @param {number} params.cursor.y - The y-coordinate of the cursor.
+ */
+function createRipple({
+    element,
+    offset,
+    cursor,
+}) {
+    const diameter = Math.max(element.clientWidth, element.clientHeight);
+    const radius = diameter / 2;
+
+    element.style.setProperty('--ripple-width', `${diameter}px`);
+    element.style.setProperty('--ripple-height', `${diameter}px`);
+    element.style.setProperty('--ripple-left', `${cursor.x - offset.left - radius}px`);
+    element.style.setProperty('--ripple-top', `${cursor.y - offset.top - radius}px`);
+
+    element.classList.add('ripple-active');
+
+    function destroy() {
+        element.classList.remove('ripple-active');
+        element.removeEventListener('animationend', destroy);
+    }
+
+    element.addEventListener('animationend', destroy);
+}
+
 export class HoboPicture extends HTMLElement {
     #isRendered = false;
 
@@ -71,18 +125,22 @@ export class HoboPicture extends HTMLElement {
         const style = document.createElement('style');
 
         style.textContent = `
+            :host {
+                position: relative;
+            }
+
             picture img {
                 width: ${imgSize};
             }
 
             .frame img {
                 position: absolute;
-
+                pointer-events: auto;
                 transition:
-                        width 0.3s,
-                        height 0.3s,
-                        margin-left 0.3s,
-                        margin-top 0.3s;
+                    width ${animationDuration},
+                    height ${animationDuration},
+                    margin-left ${animationDuration},
+                    margin-top ${animationDuration};
                     
                 &:hover {
                     transition:
@@ -94,45 +152,53 @@ export class HoboPicture extends HTMLElement {
                     height: auto;
                     margin-left: -${hoverSizeIncrease / 2}%;
                     margin-top: -${hoverSizeIncrease / 2}%;
+                    mask-size: calc(100% + ${hoverSizeIncrease}%);
+                    mask-position: center;
                 }
             }
 
-            .frame::before {
+            .ripple-mask {
+                pointer-events: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                mask-repeat: no-repeat;
+                mask-size: 100%;
+            }
+
+            .ripple-active::after {
                 content: '';
                 position: absolute;
-                display: block;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 0px;
-                height: 0px;
-                background: rgba(0, 0 ,0 , 0.2);
-                border-radius: 5%;
-                opacity: 0;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.2);
+                width: var(--ripple-width);
+                height: var(--ripple-height);
+                left: var(--ripple-left);
+                top: var(--ripple-top);
+                transform: scale(0);
+                animation: ripple ${animationDuration} linear;
             }
 
-            .frame:hover::before {
-                animation: founder-square-flash ${animationDuration};
-            }
-
-            @keyframes founder-square-flash {
-                40% {
-                    opacity: 1;
-                }
-                100% {
-                    width: ${imgSize};
-                    height: ${imgSize};
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
                     opacity: 0;
                 }
             }
         `;
+
+        const rippleMask = document.createElement('div');
+        rippleMask.classList.add('ripple-mask');
+        const ripple = document.createElement('div');
 
         const pictureFounder = createFounderPicture({
             founder,
             className: 'founder',
             assetName: founder,
         });
-        
+
         const pictureFrame = createFounderPicture({
             founder,
             className: 'frame',
@@ -142,6 +208,24 @@ export class HoboPicture extends HTMLElement {
         this.shadowRoot.append(style);
         this.shadowRoot.append(pictureFrame);
         this.shadowRoot.append(pictureFounder);
+        this.shadowRoot.append(rippleMask);
+        rippleMask.append(ripple);
+
+        rippleMask.style.maskImage = `
+            url(${getPictureUrl(pictureFounder)})
+        `;
+
+        this.addEventListener('mouseenter', e => createRipple({
+            element: ripple,
+            offset: {
+                left: this.offsetLeft,
+                top: this.offsetTop,
+            },
+            cursor: {
+                x: e.clientX,
+                y: e.clientY,
+            },
+        }));
 
         this.#isRendered = true;
     }
