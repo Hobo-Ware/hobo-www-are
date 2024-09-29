@@ -1,35 +1,52 @@
-function createPicture(founder, isFrame = false) {
-    const className = isFrame ? 'frame' : 'founder';
-    const assetPrefix = isFrame ? `frame_${founder}` : founder;
-
+/**
+ * Creates a picture element with multiple source elements for responsive images.
+ *
+ * @param {Object} options - The options for creating the picture element.
+ * @param {string} options.founder - The name of the founder.
+ * @param {string} options.className - The class name to be added to the picture element.
+ * @param {string} options.assetName - The base name of the asset files.
+ * @returns {HTMLPictureElement} The created picture element.
+ */
+function createFounderPicture({
+    founder,
+    className,
+    assetName,
+}) {
     const picture = document.createElement('picture');
     picture.addEventListener('contextmenu', e => e.preventDefault());
     picture.classList.add(className);
 
-    const responsiveSizes = [
+    [
         {
+            element: 'media',
             maxWidth: 480,
-            fileName: `${assetPrefix}_200.png`
+            fileName: `${assetName}_200.png`
         },
         {
+            element: 'media',
             maxWidth: 768,
-            fileName: `${assetPrefix}_400.png`
+            fileName: `${assetName}_400.png`
         },
-    ];
+        {
+            element: 'img',
+            fileName: `${assetName}_600.png`
+        },
+    ].forEach(({
+        element,
+        maxWidth,
+        fileName
+    }) => {
+        const source = document.createElement(element);
 
-    responsiveSizes.forEach(({ maxWidth, fileName }) => {
-        const source = document.createElement('source');
-        source.setAttribute('media', `(max-width: ${maxWidth}px)`);
+        if (maxWidth) {
+            source.setAttribute('media', `(max-width: ${maxWidth}px)`);
+        }
+
         source.setAttribute('srcset', `assets/${founder}/${fileName}`);
         picture.append(source);
     });
 
-    const img = document.createElement('img');
-    img.setAttribute('srcset', `assets/${founder}/${assetPrefix}_600.png`);
-
-    picture.append(img);
-
-    return picture
+    return picture;
 }
 
 export class HoboPicture extends HTMLElement {
@@ -109,8 +126,17 @@ export class HoboPicture extends HTMLElement {
             }
         `;
 
-        const pictureFounder = createPicture(founder);
-        const pictureFrame = createPicture(founder, true);
+        const pictureFounder = createFounderPicture({
+            founder,
+            className: 'founder',
+            assetName: founder,
+        });
+        
+        const pictureFrame = createFounderPicture({
+            founder,
+            className: 'frame',
+            assetName: `frame_${founder}`,
+        });
 
         this.shadowRoot.append(style);
         this.shadowRoot.append(pictureFrame);
