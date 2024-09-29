@@ -51,6 +51,9 @@ main {
 footer {
     grid-area: footer;
     text-align: center;
+    color: var(--color-bg);
+    z-index: 3;
+    pointer-events: none;
 }
 
 hobo-theme-toggle {
@@ -74,13 +77,12 @@ hobo-wave {
 }
 
 #hobo-founders {
-    z-index: 1;
-    
     display: flex;
     justify-content: center;
     margin: 0;
 
     .hobo-founder {
+        z-index: 1;
         --founder-size: 20vw;
 
         display: flex;
@@ -217,9 +219,60 @@ hobo-wave {
 }
 
 #hobo-footer {
+    --move-duration: 10s;
+    --move-duration-hover: 1s;
+
     z-index: 0;
 
     position: fixed;
-    bottom: -12vw;
+    bottom: -5vw;
     left: 0;
+    width: 105vw;
+    left: -2.5vw;
+
+    path {
+        transform: translate(0, 0);
+    }
+
+    #path1 {
+        animation: move-footer-1 var(--move-duration) linear infinite;
+    }
+
+    #path2 {
+        animation: move-footer-2 var(--move-duration) linear infinite
+    }
+
+    #path3 {
+        animation: move-footer-3 var(--move-duration) linear infinite
+    }
+
+    #path4 {
+        animation: move-footer-4 var(--move-duration) linear infinite
+    }
+
+    &:hover {
+        #path1, #path2, #path3, #path4 {
+            animation-duration: var(--move-duration-hover);
+        }
+    }
+}
+
+@keyframes move-footer-1 {
+    from { transform: rotate(0deg) translateX(0.1px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(0.1px) rotate(-360deg); }
+}
+
+@keyframes move-footer-2 {
+    from { transform: rotate(0deg) translateX(-0.1px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(-0.1px) rotate(-360deg); }
+}
+
+@keyframes move-footer-3 {
+    from { transform: rotate(360deg) translateX(0.1px) rotate(-360deg); }
+    to   { transform: rotate(0deg) translateX(0.1px) rotate(0deg); }
+}
+
+@keyframes move-footer-4 {
+    from { transform: rotate(360deg) translateX(-0.1px) rotate(-360deg); }
+    to   { transform: rotate(0deg) translateX(-0.1px) rotate(0deg); }
 }
