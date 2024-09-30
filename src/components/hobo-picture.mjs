@@ -16,34 +16,35 @@ function createFounderPicture({
     picture.addEventListener('contextmenu', e => e.preventDefault());
     picture.classList.add(className);
 
-    [
-        {
-            element: 'source',
-            maxWidth: 480,
-            fileName: `${assetName}_200.png`
-        },
-        {
-            element: 'source',
-            maxWidth: 768,
-            fileName: `${assetName}_400.png`
-        },
-        {
-            element: 'img',
-            fileName: `${assetName}_600.png`
-        },
-    ].forEach(({
-        element,
+    [{
+        size: 200,
+        maxWidth: 480
+    }, {
+        size: 400,
+        maxWidth: 768
+    }, {
+        size: 600,
+    }].forEach(({
+        size,
         maxWidth,
-        fileName
-    }) => {
+    }, index, { length: total }) => {
+        const type = 'image/webp';
+        const extension = 'webp';
+
+        const isBiggest = index === total - 1;
+        const element = isBiggest
+            ? 'img'
+            : 'source';
+
         const source = document.createElement(element);
         source.setAttribute('draggable', 'false');
+        source.setAttribute('type', type);
 
         if (maxWidth) {
             source.setAttribute('media', `(max-width: ${maxWidth}px)`);
         }
 
-        source.setAttribute('srcset', `assets/${founder}/${fileName}`);
+        source.setAttribute('srcset', `assets/${founder}/${assetName}_${size}.${extension}`);
         picture.append(source);
     });
 
