@@ -158,6 +158,7 @@ export class HoboPicture extends HTMLElement {
             }
 
             .ripple-mask {
+                overflow: hidden;
                 pointer-events: none;
                 position: absolute;
                 top: 0;
