@@ -1,5 +1,5 @@
 import { random } from './script/random.mjs';
-import { hypeMessages } from './script/hypeMessages.mjs';
+import hypeMessages from './assets/hype.json';
 
 const randomHype = hypeMessages[random(0, hypeMessages.length - 1)];
 
