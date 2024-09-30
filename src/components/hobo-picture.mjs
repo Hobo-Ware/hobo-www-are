@@ -70,6 +70,22 @@ function getPictureUrl(picture) {
 }
 
 /**
+ * Creates a ripple mask element with the specified image URL.
+ *
+ * @param {string} url - The URL of the image to be used as the mask.
+ * @returns {HTMLDivElement} The created div element with the ripple mask applied.
+ */
+function createRippleMask(url) {
+    const rippleMask = document.createElement('div');
+    rippleMask.classList.add('ripple-mask');
+    rippleMask.style.maskImage = `
+        url(${url})
+    `;
+
+    return rippleMask;
+}
+
+/**
  * Creates a ripple effect on the specified element.
  *
  * @param {Object} params - The parameters for creating the ripple.
@@ -82,26 +98,33 @@ function getPictureUrl(picture) {
  * @param {number} params.cursor.y - The y-coordinate of the cursor.
  */
 function createRipple({
-    element,
+    root,
+    picture,
     offset,
     cursor,
 }) {
-    const diameter = Math.max(element.clientWidth, element.clientHeight);
+    const rippleMask = createRippleMask(getPictureUrl(picture));
+    const ripple = document.createElement('div');
+
+    rippleMask.append(ripple);
+    root.append(rippleMask);
+
+    const diameter = Math.max(ripple.clientWidth, ripple.clientHeight);
     const radius = diameter / 2;
 
-    element.style.setProperty('--ripple-width', `${diameter}px`);
-    element.style.setProperty('--ripple-height', `${diameter}px`);
-    element.style.setProperty('--ripple-left', `${cursor.x - offset.left - radius}px`);
-    element.style.setProperty('--ripple-top', `${cursor.y - offset.top - radius}px`);
+    ripple.style.setProperty('--ripple-width', `${diameter}px`);
+    ripple.style.setProperty('--ripple-height', `${diameter}px`);
+    ripple.style.setProperty('--ripple-left', `${cursor.x - offset.left - radius}px`);
+    ripple.style.setProperty('--ripple-top', `${cursor.y - offset.top - radius}px`);
 
-    element.classList.add('ripple-active');
+    ripple.classList.add('ripple-active');
 
     function destroy() {
-        element.classList.remove('ripple-active');
-        element.removeEventListener('animationend', destroy);
+        ripple.removeEventListener('animationend', destroy);
+        rippleMask.remove();
     }
 
-    element.addEventListener('animationend', destroy);
+    ripple.addEventListener('animationend', destroy);
 }
 
 export class HoboPicture extends HTMLElement {
@@ -190,43 +213,38 @@ export class HoboPicture extends HTMLElement {
             }
         `;
 
-        const rippleMask = document.createElement('div');
-        rippleMask.classList.add('ripple-mask');
-        const ripple = document.createElement('div');
-
-        const pictureFounder = createFounderPicture({
+        const founderPicture = createFounderPicture({
             founder,
             className: 'founder',
             assetName: founder,
         });
 
-        const pictureFrame = createFounderPicture({
+        const framePicture = createFounderPicture({
             founder,
             className: 'frame',
             assetName: `frame_${founder}`,
         });
 
         this.shadowRoot.append(style);
-        this.shadowRoot.append(pictureFrame);
-        this.shadowRoot.append(pictureFounder);
-        this.shadowRoot.append(rippleMask);
-        rippleMask.append(ripple);
+        this.shadowRoot.append(framePicture);
+        this.shadowRoot.append(founderPicture);
 
-        rippleMask.style.maskImage = `
-            url(${getPictureUrl(pictureFounder)})
-        `;
+        const rippleDelegate = e =>
+            createRipple({
+                root: this.shadowRoot,
+                picture: founderPicture,
+                offset: {
+                    left: this.offsetLeft,
+                    top: this.offsetTop,
+                },
+                cursor: {
+                    x: e.clientX,
+                    y: e.clientY,
+                },
+            });
 
-        this.addEventListener('mouseenter', e => createRipple({
-            element: ripple,
-            offset: {
-                left: this.offsetLeft,
-                top: this.offsetTop,
-            },
-            cursor: {
-                x: e.clientX,
-                y: e.clientY,
-            },
-        }));
+        this.addEventListener('mouseenter', rippleDelegate);
+        this.addEventListener('click', rippleDelegate);
 
         this.#isRendered = true;
     }
