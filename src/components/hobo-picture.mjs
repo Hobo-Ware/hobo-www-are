@@ -2,12 +2,14 @@
  * Creates a picture element with multiple source elements for responsive images.
  *
  * @param {Object} options - The options for creating the picture element.
+ * @param {string} options.placeholder - The URL of the placeholder image.
  * @param {string} options.founder - The name of the founder.
  * @param {string} options.className - The class name to be added to the picture element.
  * @param {string} options.assetName - The base name of the asset files.
  * @returns {HTMLPictureElement} The created picture element.
  */
 function createFounderPicture({
+    placeholder,
     founder,
     className,
     assetName,
@@ -15,6 +17,15 @@ function createFounderPicture({
     const picture = document.createElement('picture');
     picture.addEventListener('contextmenu', e => e.preventDefault());
     picture.classList.add(className);
+
+    const isPlaceholderAvailable = placeholder != null;
+
+    if (isPlaceholderAvailable) {
+        const img = document.createElement('img');
+        img.setAttribute('draggable', 'false');
+        img.setAttribute('src', placeholder);
+        picture.append(img);
+    }
 
     [{
         size: 200,
@@ -24,15 +35,17 @@ function createFounderPicture({
         maxWidth: 768
     }, {
         size: 600,
+        minWidth: 769
     }].forEach(({
         size,
         maxWidth,
+        minWidth,
     }, index, { length: total }) => {
         const type = 'image/webp';
         const extension = 'webp';
-
         const isBiggest = index === total - 1;
         const element = isBiggest
+            && !isPlaceholderAvailable
             ? 'img'
             : 'source';
 
@@ -44,9 +57,24 @@ function createFounderPicture({
             source.setAttribute('media', `(max-width: ${maxWidth}px)`);
         }
 
+        if (minWidth) {
+            source.setAttribute('media', `(min-width: ${minWidth}px)`);
+        }
+
         source.setAttribute('srcset', `assets/${founder}/${assetName}_${size}.${extension}`);
         picture.append(source);
     });
+
+    if (isPlaceholderAvailable) {
+        const loader = document.createElement('img');
+        loader.setAttribute('draggable', 'false');
+        loader.setAttribute('src', getPictureUrl(picture));
+
+        loader.addEventListener('load', () => {
+            const img = picture.querySelector('img');
+            picture.appendChild(img);
+        });
+    }
 
     return picture;
 }
@@ -145,6 +173,7 @@ export class HoboPicture extends HTMLElement {
         const imgSize = this.getAttribute('image-size') || 'auto';
         const animationDuration = this.getAttribute('animation-duration') || '0.5s';
         const hoverSizeIncrease = this.getAttribute('hover-size-increase') || 5;
+        const placeholder = this.getAttribute('placeholder');
 
         const style = document.createElement('style');
 
@@ -158,6 +187,7 @@ export class HoboPicture extends HTMLElement {
             }
 
             .frame img {
+                z-index: -1;
                 position: absolute;
                 pointer-events: auto;
                 transition:
@@ -215,6 +245,7 @@ export class HoboPicture extends HTMLElement {
         `;
 
         const founderPicture = createFounderPicture({
+            placeholder,
             founder,
             className: 'founder',
             assetName: founder,
