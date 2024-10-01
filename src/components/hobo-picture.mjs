@@ -66,17 +66,45 @@ function createFounderPicture({
     });
 
     if (isPlaceholderAvailable) {
-        const loader = document.createElement('img');
-        loader.setAttribute('draggable', 'false');
-        loader.setAttribute('src', getPictureUrl(picture));
-
-        loader.addEventListener('load', () => {
-            const img = picture.querySelector('img');
-            picture.appendChild(img);
-        });
+        imageLoader(getPictureUrl(picture))
+            .then(() => {
+                const img = picture.querySelector('img');
+                picture.appendChild(img);
+            });
     }
 
     return picture;
+}
+
+/**
+ * Loads an image from the given URL.
+ *
+ * @param {string} url - The URL of the image to load.
+ * @returns {Promise<HTMLImageElement|null>} A promise that resolves to the loaded image element,
+ * or null if the image fails to load.
+ */
+function imageLoader(url) {
+    return new Promise(resolve => {
+        const img = document.createElement('img');
+        img.setAttribute('draggable', 'false');
+        img.setAttribute('src', url);
+
+        img.addEventListener('load', () => resolve(img));
+        img.addEventListener('error', () => resolve(null));
+    });
+}
+
+/**
+ * Checks if an image is loaded from the given URL.
+ *
+ * @param {string} url - The URL of the image to check.
+ * @returns {Promise<boolean>} A promise that resolves to true if the image is loaded, otherwise false.
+ */
+function isImageLoaded(url) {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(false), 1000 / 60);
+        imageLoader(url).then(img => resolve(true));
+    });
 }
 
 /**
@@ -126,13 +154,17 @@ function createRippleMask(url) {
  * @param {number} params.cursor.x - The x-coordinate of the cursor.
  * @param {number} params.cursor.y - The y-coordinate of the cursor.
  */
-function createRipple({
+async function createRipple({
     root,
     picture,
+    placeholder,
     offset,
     cursor,
 }) {
-    const rippleMask = createRippleMask(getPictureUrl(picture));
+    const maskUrl = await isImageLoaded(getPictureUrl(picture))
+        ? getPictureUrl(picture)
+        : placeholder;
+    const rippleMask = createRippleMask(maskUrl);
     const ripple = document.createElement('div');
 
     rippleMask.append(ripple);
@@ -265,6 +297,7 @@ export class HoboPicture extends HTMLElement {
             createRipple({
                 root: this.shadowRoot,
                 picture: founderPicture,
+                placeholder,
                 offset: {
                     left: this.offsetLeft,
                     top: this.offsetTop,
