@@ -11,12 +11,12 @@
 function createFounderPicture({
     placeholder,
     founder,
-    className,
+    classTokens,
     assetName,
 }) {
     const picture = document.createElement('picture');
     picture.addEventListener('contextmenu', e => e.preventDefault());
-    picture.classList.add(className);
+    picture.classList.add(...classTokens);
 
     const isPlaceholderAvailable = placeholder != null;
 
@@ -70,6 +70,7 @@ function createFounderPicture({
             .then(() => {
                 const img = picture.querySelector('img');
                 picture.appendChild(img);
+                picture.dispatchEvent(new Event('founder-load'));
             });
     }
 
@@ -218,28 +219,36 @@ export class HoboPicture extends HTMLElement {
                 width: ${imgSize};
             }
 
-            .frame img {
-                z-index: -1;
-                position: absolute;
-                pointer-events: auto;
-                transition:
-                    width ${animationDuration},
-                    height ${animationDuration},
-                    margin-left ${animationDuration},
-                    margin-top ${animationDuration};
-                    
-                &:hover {
+
+            .frame {
+                 &.placeholder {
+                    img {
+                        opacity: 0;
+                    }
+                }
+
+                img {
+                    position: absolute;
+                    pointer-events: auto;
                     transition:
                         width ${animationDuration},
                         height ${animationDuration},
                         margin-left ${animationDuration},
                         margin-top ${animationDuration};
-                    width: calc(100% + ${hoverSizeIncrease}%);
-                    height: auto;
-                    margin-left: -${hoverSizeIncrease / 2}%;
-                    margin-top: -${hoverSizeIncrease / 2}%;
-                    mask-size: calc(100% + ${hoverSizeIncrease}%);
-                    mask-position: center;
+                        
+                    &:hover {
+                        transition:
+                            width ${animationDuration},
+                            height ${animationDuration},
+                            margin-left ${animationDuration},
+                            margin-top ${animationDuration};
+                        width: calc(100% + ${hoverSizeIncrease}%);
+                        height: auto;
+                        margin-left: -${hoverSizeIncrease / 2}%;
+                        margin-top: -${hoverSizeIncrease / 2}%;
+                        mask-size: calc(100% + ${hoverSizeIncrease}%);
+                        mask-position: center;
+                    }
                 }
             }
 
@@ -279,19 +288,23 @@ export class HoboPicture extends HTMLElement {
         const founderPicture = createFounderPicture({
             placeholder,
             founder,
-            className: 'founder',
+            classTokens: ['founder', 'placeholder'],
             assetName: founder,
         });
 
         const framePicture = createFounderPicture({
             founder,
-            className: 'frame',
+            classTokens: ['frame', 'placeholder'],
             assetName: `frame_${founder}`,
         });
 
         this.shadowRoot.append(style);
         this.shadowRoot.append(framePicture);
         this.shadowRoot.append(founderPicture);
+        founderPicture.addEventListener('founder-load', () => {
+            framePicture.classList.remove('placeholder');
+            founderPicture.classList.remove('placeholder');
+        });
 
         const rippleDelegate = e =>
             createRipple({
