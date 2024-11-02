@@ -1,0 +1,24 @@
+:root {
+    --theme: light;
+
+    --primary: #fa1d3c;
+    --color-bg: #dcdde2;
+    --color-fg: #202128;
+
+    --color-bg-80: #1d1e27;
+    --color-bg-60: #393b47;
+    --color-bg-40: #595c6b;
+    --color-bg-20: #777a89;
+}
+
+:root[data-theme='dark'] {
+    --theme: dark;
+
+    --color-bg: #202128;
+    --color-fg: #dcdde2;
+
+    --color-bg-80: #e0e0e5;
+    --color-bg-60: #c8c8cf;
+    --color-bg-40: #a9abb7;
+    --color-bg-20: #8b8d98;
+}
