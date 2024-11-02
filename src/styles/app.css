@@ -1,0 +1,30 @@
+:root {
+    --logo-size: min(20vh, 15vw);
+    --logo-size-min: 10em;
+}
+
+html,
+body {
+    font-family: 'codec-cold', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    transition-property: color, background-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+
+    display: grid;
+    grid-template-rows: max(var(--logo-size), var(--logo-size-min)) auto 0.1fr;
+
+    /* Adjust heights as needed */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "header"
+        "content"
+        "footer";
+    height: 100svh;
+
+    /* Ensure the grid takes up full viewport height */
+    padding: 0;
+    margin: 0;
+}
