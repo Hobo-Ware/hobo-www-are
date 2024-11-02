@@ -1,9 +1,33 @@
 <!doctype html>
-<html lang="%paraglide.lang%" dir="%paraglide.textDirection%">
+<html lang="%paraglide.lang%" dir="%paraglide.textDirection%" data-theme="%theme.current%">
 	<head>
+		<title>Hoboware</title>
+
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="author" content="Hoboware">
+		<meta name="keywords"
+			content="web development, web design, web development agency, web development company, web development services, web development agency near me, web development company near me, web development services near me, remote web development agency, remote web development company, remote web development services">
+		<meta name="description"
+			content="Hoboware is a web development agency that specializes in creating websites and web applications.">
+
+		<meta name="og:title" content="Hoboware" />
+		<meta name="og:description" content="Hoboware is a web development agency that specializes in creating websites and web applications." />
+		<meta name="og:url" content="https://hoboware.dev" />
+		<meta name="og:image" content="https://hoboware.dev/preview/preview.png" />
+
+		<link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/favicon/light/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/favicon/light/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/favicon/light/favicon-16x16.png">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.cdnfonts.com/css/codec-cold?styles=17540,17535" rel="stylesheet">
+		<script>
+			const THEME_LS_KEY = 'hobo-theme';
+			const THEME_SEED = localStorage.getItem(THEME_LS_KEY) || 'auto';
+			document.documentElement.setAttribute('data-theme', THEME_SEED);
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
