@@ -1,2 +1,0 @@
-# hobo-www-are
-Wwwebsite
