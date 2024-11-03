@@ -208,7 +208,11 @@ hobo-wave {
         --path-translation: 0.1px;
         --path-rotation-start: 0deg;
         --path-rotation-end: 360deg;
-        animation: move-footer-path var(--footer-move-duration) linear infinite;
+        animation:
+				move-footer-path 5s linear infinite,
+				move-footer-path 1s linear infinite reverse paused;
+
+			animation-composition: add;
     }
 
     path:nth-child(2) {
@@ -228,7 +232,7 @@ hobo-wave {
 
     &:hover {
         path {
-            animation-duration: 1s;
+            animation-play-state: running;
         }
     }
 }
