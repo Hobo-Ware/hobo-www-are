@@ -1,36 +1,23 @@
 import { readonly, writable } from "svelte/store";
 import { Theme } from "$lib/features//theme/models/Theme";
-import { coerceTheme } from "$lib/features/theme/utils/coerceTheme";
 
-export const nextTheme = (browser: boolean) => (theme: Theme) => {
+export const nextTheme = (theme: Theme) => {
   switch (theme) {
     case Theme.Dark:
       return Theme.Light;
     case Theme.Light:
       return Theme.Dark;
-    case Theme.Auto:
     default:
-      if (!browser) {
-        return Theme.Light;
-      }
-
-      return globalThis.window.matchMedia("(prefers-color-scheme: dark)")
-          .matches
-        ? Theme.Light
-        : Theme.Dark;
+      return THEME_SEED as Theme;
   }
 };
 
 type Environment = {
-  browser: boolean;
-  seed: string;
+  seed: Theme;
 };
 
-export function store({
-  browser,
-  seed,
-}: Environment) {
-  const current = coerceTheme(seed);
+export function store({ seed }: Environment) {
+  const current = seed;
   const theme = writable(current);
 
   return {
@@ -40,6 +27,6 @@ export function store({
       globalThis.document.documentElement.dataset.theme = value;
       localStorage.setItem(THEME_LS_KEY, value);
     },
-    nextTheme: (theme: Theme) => nextTheme(browser)(theme),
+    nextTheme: (theme: Theme) => nextTheme(theme),
   };
 }

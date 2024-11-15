@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { store } from '$lib/features/theme/store';
+	import type { Theme } from '../models/Theme';
 	import ThemeToggleIcon from './ThemeToggleIcon.svelte';
 
-	const { theme: seed }: { theme: string } = $props();
+	const { theme: seed }: { theme: Theme } = $props();
 
 	const { theme, nextTheme, setTheme } = store({
-		seed,
-		browser
+		seed
 	});
 </script>
 
