@@ -105,9 +105,15 @@
 		}
 	}
 
-	@media (max-aspect-ratio: 4/5) {
+	@media (max-aspect-ratio: 4/7) {
 		#hobo-footer {
 			width: 200vw;
+		}
+	}
+
+	@media (min-aspect-ratio: 4/7) and (max-aspect-ratio: 4/5) {
+		#hobo-footer {
+			width: 150vw;
 		}
 	}
 
