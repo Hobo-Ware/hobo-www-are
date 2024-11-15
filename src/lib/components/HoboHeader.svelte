@@ -1,11 +1,16 @@
 <script lang="ts">
 	import ThemePicker from '$lib/features/theme/components/ThemePicker.svelte';
 	import HoboLogo from './HoboLogo.svelte';
+	import HoboGitHub from './HoboGitHub.svelte';
 
 	const { theme }: { theme: string } = $props();
 </script>
 
 <header>
+	<div class="github-logo">
+		<HoboGitHub />
+	</div>
+
 	<div class="hobo-theme-toggle">
 		<ThemePicker {theme} />
 	</div>
@@ -32,13 +37,21 @@
 			margin: 0;
 		}
 
-		.hobo-theme-toggle {
+		.hobo-theme-toggle,
+		.github-logo {
 			position: fixed;
 			width: 2.5em;
 			height: 2.5em;
 			padding: 1em;
-			right: 0;
 			top: 0;
+		}
+
+		.hobo-theme-toggle {
+			right: 0;
+		}
+
+		.github-logo {
+			left: 0;
 		}
 	}
 </style>
