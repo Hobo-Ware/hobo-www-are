@@ -13,3 +13,11 @@
 <form onsubmit={() => setTheme(nextTheme($theme))}>
 	<ThemeToggleIcon theme={$theme} />
 </form>
+
+<style>
+	form {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
