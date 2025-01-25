@@ -1,6 +1,21 @@
 <script>
+	import HoboTrakt from './HoboTrakt.svelte';
+
 	const year = new Date().getFullYear();
 </script>
+
+<footer>
+	<div class="hobo-project-list">
+		<p>Proudly working on:</p>
+		<a href="https://app.trakt.tv" target="_blank">
+			<HoboTrakt />
+		</a>
+	</div>
+
+	<p>
+		&copy; {year} Hoboware
+	</p>
+</footer>
 
 <svg
 	id="hobo-footer"
@@ -31,19 +46,38 @@
 	/>
 </svg>
 
-<footer>
-	<p>
-		&copy; {year} Hoboware
-	</p>
-</footer>
+
 
 <style>
+	.hobo-project-list {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+	}
+	
 	footer {
+		padding: 1em;
 		grid-area: footer;
-		text-align: center;
-		color: var(--color-bg);
 		pointer-events: none;
 		z-index: 1;
+
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		
+		color: var(--color-bg);
+
+		p {
+    		margin: 0;
+			font-size: smaller;
+		}
+		a {
+			pointer-events: all;
+			font-size: medium;
+			height: 1.25em;
+			width: 1.25em;
+		}
 	}
 
 	#hobo-footer {
