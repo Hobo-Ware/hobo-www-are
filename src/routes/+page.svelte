@@ -1,14 +1,17 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import HoboFooter from '$lib/components/HoboFooter.svelte';
-	import HoboHeader from '$lib/components/HoboHeader.svelte';
-	import HoboMain from '$lib/components/HoboMain.svelte';
+	import { onMount } from 'svelte';
+	import { startModes } from '$lib/features/site/mode';
+	import Weekday from '$lib/features/weekday/Weekday.svelte';
+	import Weekend from '$lib/features/weekend/Weekend.svelte';
 
-	const theme = !browser ? '' : THEME_SEED;
+	onMount(() =>
+		startModes({
+			weekday: document.getElementById('wd-root')!,
+			weekend: document.getElementById('we-root')!
+		})
+	);
 </script>
 
-<HoboHeader {theme} />
+<Weekday />
 
-<HoboMain />
-
-<HoboFooter />
+<Weekend />

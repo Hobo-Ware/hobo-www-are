@@ -1,0 +1,15 @@
+import '@fontsource/libre-caslon-display/400.css';
+import '@fontsource/crimson-pro/400.css';
+import '@fontsource/crimson-pro/400-italic.css';
+import '@fontsource/crimson-pro/500.css';
+import '@fontsource/sofia-sans-extra-condensed/500.css';
+import '@fontsource/sofia-sans-extra-condensed/700.css';
+import '@fontsource/sofia-sans-extra-condensed/800.css';
+import '@fontsource/alegreya-sans/400.css';
+import '@fontsource/alegreya-sans/400-italic.css';
+import '@fontsource/alegreya-sans/500.css';
+import '@fontsource/alegreya-sans/500-italic.css';
+import '@fontsource/alegreya-sans/700.css';
+import '@fontsource/cormorant-unicase/600.css';
+import '@fontsource/syne-mono/400.css';
+import '@fontsource/cormorant-garamond/500-italic.css';
