@@ -1,0 +1,225 @@
+name: The Dependency Rejuvenation aka Bump Versions
+
+on:
+  workflow_dispatch:
+    inputs:
+      include_major:
+        description: 'Also attempt major bumps (monthly cadence forces this on the first Sunday)'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 18 * * 0'
+
+permissions:
+  contents: read
+
+jobs:
+  bump:
+    name: Refresh Dependency Pins
+    runs-on: ubuntu-latest
+    concurrency:
+      group: packages
+      cancel-in-progress: true
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    timeout-minutes: 120
+
+    steps:
+      - name: Secure the Evidence aka Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Restore Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Ensure Labels Exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create dependencies --color 0366d6 --force
+          gh label create automated --color ededed --force
+          gh label create major-bump --color b60205 --force
+
+      - name: Decide Major Cadence
+        id: cadence
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "major=${{ inputs.include_major }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          DAY=$(date -u +%d)
+          if [ "$DAY" -le 7 ]; then
+            echo "major=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "major=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enumerate Minor Candidates
+        id: enum_minor
+        run: |
+          set -euo pipefail
+          bunx npm-check-updates@latest --target minor --jsonUpgraded > /tmp/minors.json
+          echo "::group::minor candidates"
+          cat /tmp/minors.json
+          echo "::endgroup::"
+          echo "count=$(jq 'length' /tmp/minors.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Bisect Minor Candidates
+        if: steps.enum_minor.outputs.count != '0'
+        run: |
+          ./.github/scripts/ncu-bisect.sh /tmp/minors.json
+          cp /tmp/passing.txt /tmp/passing-minor.txt
+          cp /tmp/failing.txt /tmp/failing-minor.txt
+
+      - name: Enumerate Major-Only Candidates
+        id: enum_major
+        if: steps.cadence.outputs.major == 'true'
+        run: |
+          set -euo pipefail
+          bunx npm-check-updates@latest --target latest --jsonUpgraded > /tmp/all.json
+          bunx npm-check-updates@latest --target minor  --jsonUpgraded > /tmp/minor.json
+          jq -n \
+            --slurpfile all /tmp/all.json \
+            --slurpfile minor /tmp/minor.json \
+            '($all[0] // {}) as $a | ($minor[0] // {}) as $m
+             | $a | to_entries
+             | map(select($m[.key] == null))
+             | from_entries' > /tmp/majors.json
+          echo "::group::major candidates"
+          cat /tmp/majors.json
+          echo "::endgroup::"
+          echo "count=$(jq 'length' /tmp/majors.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Bisect Major Candidates
+        if: steps.cadence.outputs.major == 'true' && steps.enum_major.outputs.count != '0'
+        run: |
+          ./.github/scripts/ncu-bisect.sh /tmp/majors.json
+          cp /tmp/passing.txt /tmp/passing-major.txt
+          cp /tmp/failing.txt /tmp/failing-major.txt
+
+      - name: Detect Adopted vs Reverted
+        id: detect
+        run: |
+          set -euo pipefail
+          if [ -s /tmp/passing-minor.txt ] || [ -s /tmp/passing-major.txt ]; then
+            echo "has_passing=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_passing=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -s /tmp/failing-major.txt ]; then
+            echo "has_failing_major=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_failing_major=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -s /tmp/passing-major.txt ]; then
+            echo "title=chore(deps): bump minor, patch & major versions" >> "$GITHUB_OUTPUT"
+          else
+            echo "title=chore(deps): bump minor & patch versions" >> "$GITHUB_OUTPUT"
+          fi
+          {
+            echo 'labels<<LABELS_EOF'
+            echo 'dependencies'
+            echo 'automated'
+            [ -s /tmp/passing-major.txt ] && echo 'major-bump'
+            echo 'LABELS_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build PR Body
+        if: steps.detect.outputs.has_passing == 'true'
+        id: pr_body
+        run: |
+          list() {
+            while IFS='=' read -r NAME VERSION; do
+              [ -z "$NAME" ] && continue
+              echo "- \`$NAME\` → \`$VERSION\`"
+            done < "$1"
+          }
+          {
+            echo "Automated dependency bump. Each candidate was tried with reinstall + check + build, then tests on the adopted set. Failures were reverted automatically; only green bumps reach this PR."
+            echo ""
+            echo "## Minor & patch"
+            echo ""
+            if [ -s /tmp/passing-minor.txt ]; then list /tmp/passing-minor.txt; else echo "_None adopted this run._"; fi
+            if [ -s /tmp/failing-minor.txt ]; then
+              echo ""
+              echo "### Reverted"
+              echo ""
+              list /tmp/failing-minor.txt
+              echo ""
+              echo "_Reverted candidates stay on their current pin; investigate or pin them out before the next run._"
+            fi
+            if [ -s /tmp/passing-major.txt ] || [ -s /tmp/failing-major.txt ]; then
+              echo ""
+              echo "## Major"
+              echo ""
+              if [ -s /tmp/passing-major.txt ]; then list /tmp/passing-major.txt; else echo "_None adopted this run._"; fi
+              if [ -s /tmp/failing-major.txt ]; then
+                echo ""
+                echo "### Skipped (tracked in companion issue)"
+                echo ""
+                list /tmp/failing-major.txt
+              fi
+            fi
+          } > /tmp/pr-body.md
+          {
+            echo 'body<<PRBODY_EOF'
+            cat /tmp/pr-body.md
+            echo 'PRBODY_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Forge the Pull Request
+        if: steps.detect.outputs.has_passing == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/deps
+          delete-branch: true
+          base: main
+          commit-message: ${{ steps.detect.outputs.title }}
+          title: ${{ steps.detect.outputs.title }}
+          body: ${{ steps.pr_body.outputs.body }}
+          labels: ${{ steps.detect.outputs.labels }}
+          reviewers: |
+            vladjerca
+            seferturan
+
+      - name: Open Issue for Reverted Majors
+        if: steps.detect.outputs.has_failing_major == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          {
+            echo "Automated major-bump run could not promote the following packages. Each was attempted against a rolling baseline and reverted on failure."
+            echo ""
+            echo "## Reverted majors"
+            echo ""
+            while IFS='=' read -r NAME VERSION; do
+              [ -z "$NAME" ] && continue
+              echo "### \`$NAME\` → \`$VERSION\`"
+              echo ""
+              echo "<details><summary>Last 80 log lines</summary>"
+              echo ""
+              echo '```'
+              tail -n 80 "/tmp/bisect-logs/rejected-${NAME//\//__}.log" 2>/dev/null || echo "(log missing)"
+              echo '```'
+              echo "</details>"
+              echo ""
+            done < /tmp/failing-major.txt
+            echo ""
+            echo "_Triage path:_ bump locally, investigate the failure, either land a fix or pin the package with a reason."
+            echo ""
+            echo "Opened by \`packages.yml\` run \`${{ github.run_id }}\`."
+          } > /tmp/issue-body.md
+
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "chore(deps): major bumps that need manual triage ($(date -u +%Y-%m-%d))" \
+            --body-file /tmp/issue-body.md \
+            --label dependencies \
+            --label automated \
+            --label major-bump
