@@ -1,27 +1,9 @@
 <!doctype html>
 <html lang="%paraglide.lang%" dir="ltr">
 	<head>
-		<title>Hoboware</title>
-
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="author" content="Hoboware" />
-		<meta
-			name="keywords"
-			content="web development, web design, web development agency, web development company, web development services, web development agency near me, web development company near me, web development services near me, remote web development agency, remote web development company, remote web development services"
-		/>
-		<meta
-			name="description"
-			content="Hoboware is a web development agency that specializes in creating websites and web applications."
-		/>
-
-		<meta name="og:title" content="Hoboware" />
-		<meta
-			name="og:description"
-			content="Hoboware is a web development agency that specializes in creating websites and web applications."
-		/>
-		<meta name="og:url" content="https://hoboware.dev" />
-		<meta name="og:image" content="https://hoboware.dev/preview/preview.png" />
 
 		<link
 			rel="apple-touch-icon"
@@ -59,7 +41,7 @@
 							: 'weekday';
 			})();
 		</script>
-		%hobo.fonts% %sveltekit.head%
+		%hobo.fonts% %hobo.jsonld% %sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

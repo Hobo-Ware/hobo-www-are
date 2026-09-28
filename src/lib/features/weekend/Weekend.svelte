@@ -65,7 +65,7 @@
 
 		<section class="hero">
 			<div class="stage">
-				<h1 class="stage-title">{m.we_title()} <em>{m.we_title_em()}</em></h1>
+				<h2 class="stage-title">{m.we_title()} <em>{m.we_title_em()}</em></h2>
 				<div class="orbit" id="we-cab">
 					<svg class="orbit-dash" viewBox="0 0 100 100" aria-hidden="true"
 						><circle cx="50" cy="50" r="46" /></svg
