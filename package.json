@@ -12,7 +12,8 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "bun run test:unit -- --run",
-		"sample:logo": "bun scripts/sample-logo.mjs"
+		"sample:logo": "bun scripts/sample-logo.mjs",
+		"og:images": "bun scripts/og-images.mjs"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
