@@ -1,6 +1,6 @@
 import MOSAIC from './mosaic.json';
 import { attachLens } from './lens.js';
-import { isDark, toggleTheme } from '$lib/features/site/theme';
+import { isDark, switchTheme } from '$lib/features/site/theme';
 
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*+=?!/<>~';
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
@@ -74,9 +74,8 @@ export function mount(rootEl, copy) {
 		$('#we-theme-lbl').textContent = isDark() ? copy.dreaming : copy.awake;
 		themeListeners.forEach((fn) => fn());
 	}
-	listen($('#we-theme'), 'click', () => {
-		toggleTheme();
-		syncThemeUi();
+	listen($('#we-theme'), 'click', (e) => {
+		switchTheme(e.currentTarget, '#d6479f', syncThemeUi);
 	});
 
 	const sleep = { k: 0, target: 0 };

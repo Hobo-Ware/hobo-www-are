@@ -1,4 +1,4 @@
-import { toggleTheme } from '$lib/features/site/theme';
+import { switchTheme } from '$lib/features/site/theme';
 
 export function mount(rootEl, copy) {
 	const $ = (s) => rootEl.querySelector(s),
@@ -62,9 +62,8 @@ export function mount(rootEl, copy) {
 		function syncThemeUi() {
 			paint.refresh();
 		}
-		$id('theme').addEventListener('click', () => {
-			toggleTheme();
-			syncThemeUi();
+		$id('theme').addEventListener('click', (e) => {
+			switchTheme(e.currentTarget, '#ff7a2e', syncThemeUi);
 		});
 
 		let footerLive = false;

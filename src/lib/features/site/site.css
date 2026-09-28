@@ -85,6 +85,50 @@ html[data-mode='weekend'] .mode-switch [data-mode-set='weekend'] {
 	animation-duration: 0.5s;
 	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+html[data-theme-switch]::view-transition-old(root),
+html[data-theme-switch]::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+html[data-theme-switch]::view-transition-new(root) {
+	z-index: 1;
+}
+html[data-theme-switch]::view-transition-group(theme-ring) {
+	z-index: 2;
+	animation: none;
+}
+html[data-theme-switch]::view-transition-old(theme-ring) {
+	display: none;
+}
+html[data-theme-switch]::view-transition-new(theme-ring) {
+	animation: none;
+}
+html[data-theme-switch] *,
+html[data-theme-switch] *::before,
+html[data-theme-switch] *::after {
+	transition: none !important;
+}
+.theme-ring {
+	position: fixed;
+	width: 240px;
+	height: 240px;
+	border-radius: 50%;
+	pointer-events: none;
+	view-transition-name: theme-ring;
+	box-shadow:
+		0 0 0 1.5px var(--ring),
+		0 0 18px 4px color-mix(in srgb, var(--ring) 70%, transparent),
+		inset 0 0 22px 2px color-mix(in srgb, var(--ring) 45%, transparent);
+}
+html.theme-fading,
+html.theme-fading * {
+	transition:
+		background-color 0.45s ease,
+		color 0.45s ease,
+		border-color 0.45s ease,
+		fill 0.45s ease,
+		stroke 0.45s ease !important;
+}
 html.mode-fading body {
 	opacity: 0;
 	transition: opacity 0.22s ease;
