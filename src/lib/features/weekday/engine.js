@@ -676,8 +676,28 @@ export function mount(rootEl, copy) {
 				return c;
 			});
 
+			const LUT32 = LUTS.map((lut) =>
+				Uint32Array.from(lut, (c) => {
+					const [r, g, b] = c.match(/\d+/g).map(Number);
+					return ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0;
+				})
+			);
+			const cellCv = document.createElement('canvas'),
+				cellCtx = cellCv.getContext('2d');
+			const gapCv = document.createElement('canvas'),
+				gapCtx = gapCv.getContext('2d');
+			const flameCv = document.createElement('canvas'),
+				flameCtx = flameCv.getContext('2d');
+			let cellImg = null,
+				cellBuf = new Uint32Array(0),
+				CIDX = new Uint32Array(0),
+				gridCols = 1,
+				gridRows = 1,
+				rowTop = 0,
+				rowSpan = 1;
+
 			const MAX_EMBERS = 900,
-				MAX_FLAMES = 700;
+				MAX_FLAMES = 380;
 			const E = {
 				x: new Float32Array(MAX_EMBERS),
 				y: new Float32Array(MAX_EMBERS),
@@ -822,13 +842,50 @@ export function mount(rootEl, copy) {
 				}
 				HOT = new Uint32Array(hot);
 				for (let i = 0, h = 0; i < N; i++) if (CK[i]) HOT[h++] = i;
+				layoutCellImage();
 				E.n = 0;
 				F.n = 0;
+				flameCv.width = Math.max(1, cv.width >> 1);
+				flameCv.height = Math.max(1, cv.height >> 1);
+				flameCtx.setTransform(dpr / 2, 0, 0, dpr / 2, 0, 0);
+				flameCtx.globalCompositeOperation = 'lighter';
+				flameCtx.globalAlpha = 0.002;
+				for (const s of FLAME_SPRITES) flameCtx.drawImage(s, 0, 0, 8, 8);
+				flameCtx.globalAlpha = 1;
 				ctx.globalCompositeOperation = 'lighter';
-				ctx.globalAlpha = 0.002;
-				for (const s of FLAME_SPRITES) ctx.drawImage(s, 0, 0, 8, 8);
-				ctx.globalAlpha = 1;
+				ctx.drawImage(flameCv, 0, 0, 8, 8);
 				ctx.globalCompositeOperation = 'source-over';
+			}
+
+			function layoutCellImage() {
+				gridCols = Math.max(1, Math.ceil(W / cs) + 1);
+				gridRows = Math.max(1, Math.ceil(H / cs) + 1);
+				cellCv.width = gridCols;
+				cellCv.height = gridRows;
+				cellImg = cellCtx.createImageData(gridCols, gridRows);
+				cellBuf = new Uint32Array(cellImg.data.buffer);
+				CIDX = new Uint32Array(N);
+				for (let i = 0; i < N; i++) {
+					const col = Math.round(CX[i] / cs),
+						row = Math.round(CY[i] / cs);
+					CIDX[i] =
+						row >= 0 && row < gridRows && col >= 0 && col < gridCols ? row * gridCols + col : 0;
+				}
+				let lo = gridRows,
+					hi = 0;
+				for (let i = 0; i < N; i++) {
+					const row = (CIDX[i] / gridCols) | 0;
+					if (row < lo) lo = row;
+					if (row > hi) hi = row;
+				}
+				rowTop = Math.min(lo, hi);
+				rowSpan = Math.max(1, hi - rowTop + 1);
+				gapCv.width = cv.width;
+				gapCv.height = Math.max(1, Math.ceil(rowSpan * cs * dpr));
+				gapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+				gapCtx.fillStyle = '#000';
+				for (let c = 0; c < gridCols; c++) gapCtx.fillRect(c * cs + cs - 1, 0, 1, rowSpan * cs);
+				for (let r = 0; r < rowSpan; r++) gapCtx.fillRect(0, r * cs + cs - 1, W, 1);
 			}
 
 			function spawn(i, kick) {
@@ -919,14 +976,14 @@ export function mount(rootEl, copy) {
 					}
 					let h = CB[i] + n * 0.13 + CFL[i] - CSP[i] + lift * (kind ? 1 : 0.6);
 					if (blaze.k)
-						h += (Math.min(1, (kind ? 1 : 0.8) + n * 0.06) - h) * blaze.k * (kind ? 0.95 : 0.7);
+						h += ((kind ? 0.8 + 0.16 * (n > 0 ? n : 0) : 0.72) - h) * blaze.k * (kind ? 0.9 : 0.6);
 					h = h < 0 ? 0 : h > 1 ? 1 : h;
 					CH[i] = h;
 					CFL[i] *= dec;
 					CSP[i] *= rec;
-					ctx.fillStyle = LUTS[kind][(h * 95) | 0];
-					ctx.fillRect(x, y, cs - 1, cs - 1);
+					cellBuf[CIDX[i]] = LUT32[kind][(h * 95) | 0];
 				}
+				drawCells();
 
 				if (!reduce) {
 					acc += dt * (W / 1000) * 38 * (1 + Math.min(2, speed / 800) + fire * 5);
@@ -1022,17 +1079,38 @@ export function mount(rootEl, copy) {
 				ctx.globalCompositeOperation = 'lighter';
 				ctx.imageSmoothingEnabled = true;
 				const glow = Math.max(blaze.k, fan.heat * 0.45);
-				const shimmer = glow ? Math.sin(t * 23) * 2.5 * glow * dpr : 0;
-				ctx.globalAlpha = 0.5 + glow * 0.3;
-				ctx.drawImage(g1, 0, shimmer, cv.width, cv.height);
-				ctx.globalAlpha = 0.55 + glow * 0.35;
-				ctx.drawImage(g2, 0, -shimmer * 2, cv.width, cv.height);
+				ctx.globalAlpha = 0.5 + glow * 0.14;
+				ctx.drawImage(g1, 0, 0, cv.width, cv.height);
+				ctx.globalAlpha = 0.55 + glow * 0.16;
+				ctx.drawImage(g2, 0, 0, cv.width, cv.height);
 				ctx.restore();
 
 				ptr.vx *= Math.pow(0.88, dt * 60);
 				ptr.vy *= Math.pow(0.88, dt * 60);
 			}
+			function drawCells() {
+				cellCtx.putImageData(cellImg, 0, 0, 0, rowTop, gridCols, rowSpan);
+				ctx.imageSmoothingEnabled = false;
+				ctx.drawImage(
+					cellCv,
+					0,
+					rowTop,
+					gridCols,
+					rowSpan,
+					0,
+					rowTop * cs,
+					gridCols * cs,
+					rowSpan * cs
+				);
+				ctx.imageSmoothingEnabled = true;
+				ctx.save();
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.globalCompositeOperation = 'destination-out';
+				ctx.drawImage(gapCv, 0, Math.round(rowTop * cs * dpr));
+				ctx.restore();
+			}
 			function drawFlames(dt, t, k) {
+				flameCtx.clearRect(0, 0, W, H);
 				const want = k * (W / 1000) * 520 * dt;
 				for (let i = 0; i < want; i++) spawnFlame(k);
 				const pull = ptr.on ? ptr.vx * 0.04 * dt : 0,
@@ -1060,8 +1138,8 @@ export function mount(rootEl, copy) {
 					F.y[j] = y;
 					const age = 1 - life;
 					const sz = F.s[j] * (age < 0.2 ? 0.5 + age * 2.5 : 1 - (age - 0.2) * 0.7);
-					ctx.globalAlpha = Math.min(1, life * 2.2) * 0.85;
-					ctx.drawImage(
+					flameCtx.globalAlpha = Math.min(1, life * 2.2) * 0.44;
+					flameCtx.drawImage(
 						FLAME_SPRITES[age >= 0.8333 ? 5 : (age * 6) | 0],
 						x - sz / 2,
 						y - sz * 0.7,
@@ -1069,6 +1147,8 @@ export function mount(rootEl, copy) {
 						sz * 1.35
 					);
 				}
+				ctx.globalAlpha = 1;
+				ctx.drawImage(flameCv, 0, 0, W, H);
 			}
 			function ignite(now) {
 				if (now < blaze.cool) return;
