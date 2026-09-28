@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html
-	lang="%paraglide.lang%"
-	dir="%paraglide.textDirection%"
-	data-theme="%theme.current%"
->
+<!doctype html>
+<html lang="%paraglide.lang%" dir="ltr">
 	<head>
 		<title>Hoboware</title>
 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="author" content="Hoboware">
+		<meta name="author" content="Hoboware" />
 		<meta
 			name="keywords"
 			content="web development, web design, web development agency, web development company, web development services, web development agency near me, web development company near me, web development services near me, remote web development agency, remote web development company, remote web development services"
-		>
+		/>
 		<meta
 			name="description"
 			content="Hoboware is a web development agency that specializes in creating websites and web applications."
-		>
+		/>
 
 		<meta name="og:title" content="Hoboware" />
 		<meta
@@ -25,44 +21,45 @@
 			content="Hoboware is a web development agency that specializes in creating websites and web applications."
 		/>
 		<meta name="og:url" content="https://hoboware.dev" />
-		<meta
-			name="og:image"
-			content="https://hoboware.dev/preview/preview.png"
-		/>
+		<meta name="og:image" content="https://hoboware.dev/preview/preview.png" />
 
 		<link
 			rel="apple-touch-icon"
 			sizes="180x180"
 			href="%sveltekit.assets%/favicon/light/apple-touch-icon.png"
-		>
+		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="32x32"
 			href="%sveltekit.assets%/favicon/light/favicon-32x32.png"
-		>
+		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="16x16"
 			href="%sveltekit.assets%/favicon/light/favicon-16x16.png"
-		>
+		/>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link
-			href="https://fonts.cdnfonts.com/css/codec-cold?styles=17540,17535"
-			rel="stylesheet"
-		>
 		<script>
-			const THEME_LS_KEY = "hobo-theme";
-			const OS_THEME = window.matchMedia("(prefers-color-scheme: dark)").matches
-				? "dark"
-				: "light";
-			const THEME_SEED = localStorage.getItem(THEME_LS_KEY) ?? OS_THEME;
-			document.documentElement.setAttribute("data-theme", THEME_SEED);
+			(function () {
+				var root = document.documentElement;
+				var stored = null;
+				try {
+					stored = localStorage.getItem('hobo-theme');
+				} catch (e) {}
+				root.dataset.theme = stored === 'light' ? 'light' : 'dark';
+				var hash = location.hash.slice(1);
+				var day = new Date().getDay();
+				root.dataset.mode =
+					hash === 'weekday' || hash === 'weekend'
+						? hash
+						: day === 0 || day === 6
+							? 'weekend'
+							: 'weekday';
+			})();
 		</script>
-		%sveltekit.head%
+		%hobo.fonts% %sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

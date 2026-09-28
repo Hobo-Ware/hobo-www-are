@@ -2,3 +2,10 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Generated data
+src/lib/features/weekday/logo-grid.json
+src/lib/features/weekend/mosaic.json
+src/lib/features/weekend/cabinet.json
+src/lib/paraglide/
+paraglide/project.inlang/
