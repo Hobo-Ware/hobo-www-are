@@ -235,8 +235,12 @@ export function mount(rootEl, copy) {
 			}));
 			let together = false;
 			const start = performance.now();
-			logo.addEventListener('pointerenter', () => (together = true));
-			logo.addEventListener('pointerleave', () => (together = false));
+			logo.addEventListener('pointerenter', (e) => {
+				if (e.pointerType !== 'touch') together = true;
+			});
+			logo.addEventListener('pointerleave', (e) => {
+				if (e.pointerType !== 'touch') together = false;
+			});
 			logo.addEventListener(
 				'touchstart',
 				() => {
