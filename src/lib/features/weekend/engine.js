@@ -402,8 +402,8 @@ export function mount(rootEl, copy) {
 				place(0, 1, 0, true);
 			}
 		};
-		listen(logo, 'pointerenter', () => setTogether(true));
-		listen(logo, 'pointerleave', () => setTogether(false));
+		listen(logo, 'pointerenter', (e) => e.pointerType !== 'touch' && setTogether(true));
+		listen(logo, 'pointerleave', (e) => e.pointerType !== 'touch' && setTogether(false));
 		listen(logo, 'touchstart', () => setTogether(!together), { passive: true });
 		listen(window, 'resize', () => {
 			geo = null;
