@@ -2,6 +2,9 @@ html,
 body {
 	margin: 0;
 }
+html {
+	touch-action: pan-x pan-y;
+}
 html[data-mode='weekend'] #wd-root,
 html[data-mode='weekday'] #we-root {
 	display: none;
