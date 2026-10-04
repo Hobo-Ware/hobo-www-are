@@ -11,8 +11,8 @@
 		GITHUB_URL,
 		SKILL_ATTRIBUTE,
 		check,
-		hype,
 		skillName,
+		type Hype,
 		type SkillKey
 	} from '$lib/features/site/content';
 	import { weekendClock } from '$lib/features/site/copy';
@@ -21,10 +21,10 @@
 	import TarotCard from './TarotCard.svelte';
 	import WeekendDefs from './WeekendDefs.svelte';
 
-	const entries = hype();
-	const opening = entries[cabinet.opening];
+	const { hype: entries }: { hype: Hype[] } = $props();
+	const opening = $derived(entries[cabinet.opening]);
 	const year = new Date().getFullYear();
-	const lineCount = entries.length;
+	const lineCount = $derived(entries.length);
 
 	const bonus = (amount: number, skill: string) =>
 		m.we_bonus({
@@ -32,12 +32,12 @@
 			skill: skillName(skill as SkillKey)
 		});
 
-	const log: [SkillKey | 'hoboware', Parameters<typeof check>[0], string, string][] = [
+	const log: [SkillKey | 'hoboware', Parameters<typeof check>[0], string, string][] = $derived([
 		['laziness', 'legendary', m.we_weekend_line(), ' past'],
 		['inland_empire', 'medium', opening.messages[0], ' past'],
 		['shivers', 'easy', opening.messages[1], ' past'],
 		['hoboware', 'legendary', opening.slogan.trim(), ' slogan']
-	];
+	]);
 </script>
 
 <div id="we-root" class="mode-weekend">

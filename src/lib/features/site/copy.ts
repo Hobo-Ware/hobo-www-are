@@ -8,7 +8,6 @@ import {
 	SKILL_ATTRIBUTE,
 	attributeName,
 	check,
-	hype,
 	levelName,
 	skillName,
 	statLabel,
@@ -78,8 +77,8 @@ const FOUNDER_LINES: Record<string, [SkillKey, () => string][]> = {
 
 const skillPair = (key: SkillKey): [string, Attribute] => [skillName(key), SKILL_ATTRIBUTE[key]];
 
-const shared = () => ({
-	hype: hype(),
+const shared = (hype: Hype[]) => ({
+	hype,
 	levels: LEVELS.map(levelName),
 	legendary: check('legendary'),
 	check: (level: string, success: boolean) =>
@@ -99,9 +98,9 @@ export const tallestHype = (entries: Hype[]) =>
 
 export const PRERENDER_SKILLS = WEEKDAY_SKILLS.map(skillPair);
 
-export function weekdayCopy() {
+export function weekdayCopy(hype: Hype[]) {
 	return {
-		...shared(),
+		...shared(hype),
 		skills: WEEKDAY_SKILLS.map(skillPair),
 		founders: Object.fromEntries(
 			FOUNDERS.map((f) => [
@@ -133,9 +132,9 @@ export function weekdayCopy() {
 	};
 }
 
-export function weekendCopy() {
+export function weekendCopy(hype: Hype[]) {
 	return {
-		...shared(),
+		...shared(hype),
 		skills: WEEKEND_SKILLS.map(skillPair),
 		clock: weekendClock,
 		dreaming: m.we_theme_dreaming(),

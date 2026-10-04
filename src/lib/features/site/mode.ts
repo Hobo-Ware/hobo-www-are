@@ -1,22 +1,25 @@
-import { mount as mountWeekday } from '$lib/features/weekday/engine.js';
-import { mount as mountWeekend } from '$lib/features/weekend/engine.js';
+import type { Hype } from './content';
 import { weekdayCopy, weekendCopy } from './copy';
 
 export type Mode = 'weekday' | 'weekend';
 
 const isMode = (value: string): value is Mode => value === 'weekday' || value === 'weekend';
 
-const engines: Record<Mode, (root: HTMLElement) => () => void> = {
-	weekday: (root) => mountWeekday(root, weekdayCopy()),
-	weekend: (root) => mountWeekend(root, weekendCopy())
+type Unmount = () => void;
+
+const engines: Record<Mode, (root: HTMLElement, hype: Hype[]) => Promise<Unmount>> = {
+	weekday: async (root, hype) =>
+		(await import('$lib/features/weekday/engine.js')).mount(root, weekdayCopy(hype)),
+	weekend: async (root, hype) =>
+		(await import('$lib/features/weekend/engine.js')).mount(root, weekendCopy(hype))
 };
 
-export function startModes(roots: Record<Mode, HTMLElement>): () => void {
+export function startModes(roots: Record<Mode, HTMLElement>, hype: Hype[]): () => void {
 	const html = document.documentElement;
 	const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 	let mode: Mode = html.dataset.mode === 'weekend' ? 'weekend' : 'weekday';
 	html.dataset.mode = mode;
-	let unmount = engines[mode](roots[mode]);
+	let running = engines[mode](roots[mode], hype);
 
 	const sync = () =>
 		document
@@ -25,12 +28,15 @@ export function startModes(roots: Record<Mode, HTMLElement>): () => void {
 	sync();
 
 	function swap(next: Mode) {
-		unmount();
+		const previous = running;
 		roots.weekend.classList.add('mode-weekend');
 		mode = next;
 		html.dataset.mode = next;
 		scrollTo(0, 0);
-		unmount = engines[next](roots[next]);
+		running = previous.then((unmount) => {
+			unmount();
+			return engines[next](roots[next], hype);
+		});
 		sync();
 	}
 
@@ -62,6 +68,6 @@ export function startModes(roots: Record<Mode, HTMLElement>): () => void {
 	return () => {
 		document.removeEventListener('click', onClick);
 		removeEventListener('hashchange', onHash);
-		unmount();
+		running.then((unmount) => unmount());
 	};
 }
