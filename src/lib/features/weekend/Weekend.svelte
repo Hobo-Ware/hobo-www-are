@@ -15,6 +15,7 @@
 		skillName,
 		type SkillKey
 	} from '$lib/features/site/content';
+	import { weekendClock } from '$lib/features/site/copy';
 	import cabinet from './cabinet.json';
 	import { restingWave } from './geometry';
 	import TarotCard from './TarotCard.svelte';
@@ -118,7 +119,11 @@
 			</div>
 
 			<div class="dialogue" aria-live="polite">
-				<div class="kicker">{m.we_kicker()}</div>
+				<div class="kicker">
+					<span class="kicker-line"
+						>{m.we_kicker()} &middot; <span id="we-clock">{weekendClock(new Date())}</span></span
+					>
+				</div>
 				<ol class="log" id="we-log" data-entry={cabinet.opening}>
 					{#each log as [skill, level, said, cls], i (i)}
 						<li class="line{cls}">
