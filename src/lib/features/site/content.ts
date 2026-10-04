@@ -1,8 +1,4 @@
-import { getLocale } from '$lib/paraglide/runtime';
 import * as m from '$lib/paraglide/messages';
-import HypeEnglish from '$lib/hype/en.json';
-import HypeDutch from '$lib/hype/nl.json';
-import HypeRomanian from '$lib/hype/ro.json';
 
 export type Hype = { messages: string[]; slogan: string };
 export type Attribute = 'intellect' | 'psyche' | 'physique' | 'motorics' | 'laziness';
@@ -18,10 +14,6 @@ export type SkillKey =
 	| 'shivers'
 	| 'laziness';
 export type FounderId = 'vlad' | 'sefer';
-
-const hypeByLanguage = { en: HypeEnglish, nl: HypeDutch, ro: HypeRomanian };
-
-export const hype = (): Hype[] => hypeByLanguage[getLocale()];
 
 export const MAX_STAT = 6;
 

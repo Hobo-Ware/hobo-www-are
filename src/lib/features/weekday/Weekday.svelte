@@ -7,12 +7,12 @@
 	import IconLinkedIn from '$lib/components/icons/IconLinkedIn.svelte';
 	import ModeSwitch from '$lib/features/site/ModeSwitch.svelte';
 	import ProjectLinks from '$lib/features/site/ProjectLinks.svelte';
-	import { FOUNDERS, GITHUB_URL, LEVELS, check, hype } from '$lib/features/site/content';
+	import { FOUNDERS, GITHUB_URL, LEVELS, check, type Hype } from '$lib/features/site/content';
 	import { PRERENDER_SKILLS, clock, tallestHype } from '$lib/features/site/copy';
 	import WeekdayStats from './WeekdayStats.svelte';
 
-	const entries = hype();
-	const opening = entries[tallestHype(entries)];
+	const { hype: entries }: { hype: Hype[] } = $props();
+	const opening = $derived(entries[tallestHype(entries)]);
 	const year = new Date().getFullYear();
 </script>
 
