@@ -23,7 +23,9 @@ const config = {
 				config.exclude.push(
 					'../src/lib/features/weekday/engine.js',
 					'../src/lib/features/weekend/engine.js',
-					'../src/lib/features/weekend/lens.js'
+					'../src/lib/features/weekend/lens.js',
+					'../src/lib/features/weekend/scene.js',
+					'../src/lib/features/weekend/scene.worker.js'
 				);
 			}
 		}
