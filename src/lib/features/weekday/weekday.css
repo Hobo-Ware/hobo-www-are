@@ -226,25 +226,35 @@ html[data-mode='weekday'] body {
 		opacity: calc(var(--rim-alpha) * 1.15);
 	}
 }
-@keyframes coal {
+@keyframes coal-dim {
 	0%,
 	100% {
-		background: #ff8a2e;
+		opacity: 0;
 	}
 	45% {
-		background: #f06a22;
+		opacity: 1;
 	}
 	70% {
-		background: #ffa44a;
+		opacity: 0;
 	}
 }
-@keyframes coal-hot {
+@keyframes coal-bright {
+	0%,
+	45%,
+	100% {
+		opacity: 0;
+	}
+	70% {
+		opacity: 1;
+	}
+}
+@keyframes coal-hot-glow {
 	0%,
 	100% {
-		background: var(--coal-hot);
+		opacity: 0;
 	}
 	50% {
-		background: #ffc266;
+		opacity: 1;
 	}
 }
 @keyframes crown-flicker {
@@ -1264,17 +1274,39 @@ html[data-mode='weekday'] body {
 		--shade: 1;
 	}
 	.pip.full {
+		position: relative;
 		background: #ff8a2e;
 		box-shadow: 0 0 8px var(--coal-glow);
-		animation: coal calc(1.7s + var(--k) * 0.29s) ease-in-out
+	}
+	.pip.full::before,
+	.pip.full::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		opacity: 0;
+		animation: coal-dim calc(1.7s + var(--k) * 0.29s) ease-in-out
 			calc(var(--row) * -0.41s - var(--k) * 0.67s) infinite;
+	}
+	.pip.full::before {
+		background: #f06a22;
+	}
+	.pip.full::after {
+		background: #ffa44a;
+		animation-name: coal-bright;
 	}
 	.stat.maxed .pip.full {
 		background: var(--coal-hot);
 		box-shadow:
 			0 0 10px var(--coal-glow-hot),
 			0 0 3px #ffb454;
-		animation-name: coal-hot;
+	}
+	.stat.maxed .pip.full::before {
+		display: none;
+	}
+	.stat.maxed .pip.full::after {
+		background: #ffc266;
+		animation-name: coal-hot-glow;
 	}
 	.stat-val {
 		display: inline-flex;
@@ -1297,27 +1329,13 @@ html[data-mode='weekday'] body {
 		animation: crown-flicker 2.2s steps(1) infinite;
 	}
 	.sheet.replay .pip.full {
-		animation:
-			ignite 0.7s ease-out backwards,
-			coal calc(1.7s + var(--k) * 0.29s) ease-in-out 0.9s infinite;
-		animation-delay:
-			calc(var(--row) * 90ms + var(--k) * 60ms + 150ms),
-			calc(var(--row) * -0.41s - var(--k) * 0.67s);
-	}
-	.sheet.replay .stat.maxed .pip.full {
-		animation-name: ignite, coal-hot;
+		animation: ignite 0.7s ease-out backwards;
+		animation-delay: calc(var(--row) * 90ms + var(--k) * 60ms + 150ms);
 	}
 	.sheet:hover .pip.full,
 	.sheet:focus-within .pip.full {
-		animation:
-			flare 0.8s ease-out both,
-			coal calc(1.7s + var(--k) * 0.29s) ease-in-out 0.8s infinite;
-		animation-delay:
-			calc(var(--row) * 110ms + var(--k) * 55ms), calc(var(--row) * -0.41s - var(--k) * 0.67s);
-	}
-	.sheet:hover .stat.maxed .pip.full,
-	.sheet:focus-within .stat.maxed .pip.full {
-		animation-name: flare, coal-hot;
+		animation: flare 0.8s ease-out both;
+		animation-delay: calc(var(--row) * 110ms + var(--k) * 55ms);
 	}
 	.sheet:hover .crown,
 	.sheet:focus-within .crown {
