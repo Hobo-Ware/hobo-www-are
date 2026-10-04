@@ -13,7 +13,6 @@ let paint = null,
 	mosaicOn = false,
 	pending = null,
 	looping = false,
-	trace = null,
 	pendingDrawn = [],
 	fontReady = null;
 
@@ -43,7 +42,6 @@ function loop(now) {
 	if (paint && paintOn) paint.frame(now, drowsy, reduce);
 	if (mosaic && mosaicOn && mosaic.laidOut && !reduce) {
 		mosaic.tick(now, drowsy);
-		if (trace) trace.push(now);
 	}
 	if (pendingDrawn.length) {
 		pendingDrawn.forEach((id) => self.postMessage({ type: 'drawn', id }));
@@ -155,13 +153,6 @@ const handlers = {
 		]).then(([p, q]) =>
 			self.postMessage({ type: 'frozen', id: m.id, paint: p, mosaic: q }, [p, q].filter(Boolean))
 		);
-	},
-	trace(m) {
-		if (m.on) trace = [];
-		else {
-			self.postMessage({ type: 'trace', frames: trace || [] });
-			trace = null;
-		}
 	}
 };
 

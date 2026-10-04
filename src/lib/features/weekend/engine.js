@@ -825,7 +825,6 @@ export function mount(rootEl, copy) {
 					listen(document, 'visibilitychange', () =>
 						post({ type: 'paintVisible', on: !document.hidden })
 					);
-					listen(rootEl, 'we-trace', (e) => post({ type: 'trace', on: e.detail.on }));
 				}
 			};
 			worker.onmessage = (e) => {
@@ -833,8 +832,6 @@ export function mount(rootEl, copy) {
 				if (m.type === 'drawn' || m.type === 'frozen') {
 					waiting.get(m.id)?.(m);
 					waiting.delete(m.id);
-				} else if (m.type === 'trace') {
-					rootEl.dispatchEvent(new CustomEvent('we-trace-result', { detail: m.frames }));
 				} else if (m.type === 'fail') fallBack(m.which);
 			};
 			worker.onerror = () => {
