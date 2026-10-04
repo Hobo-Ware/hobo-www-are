@@ -25,14 +25,21 @@ function ringAt(x: number, y: number, color: string) {
 	return ring;
 }
 
-export function switchTheme(origin: HTMLElement, ringColor: string, onApplied: () => void) {
+export function switchTheme(
+	origin: HTMLElement,
+	ringColor: string,
+	onApplied: () => void | Promise<void>
+) {
 	const next: Theme = isDark() ? 'light' : 'dark';
 	const update = () => {
 		applyTheme(next);
-		onApplied();
+		return onApplied();
 	};
 	const html = document.documentElement;
-	if (matchMedia('(prefers-reduced-motion: reduce)').matches) return update();
+	if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		update();
+		return;
+	}
 	if (!document.startViewTransition) {
 		html.classList.add('theme-fading');
 		update();
@@ -47,8 +54,8 @@ export function switchTheme(origin: HTMLElement, ringColor: string, onApplied: (
 	let ring: HTMLElement | null = null;
 
 	html.dataset.themeSwitch = '';
-	const transition = document.startViewTransition(() => {
-		update();
+	const transition = document.startViewTransition(async () => {
+		await update();
 		ring = ringAt(x, y, ringColor);
 	});
 	transition.ready.then(() => {
