@@ -34,6 +34,11 @@ export function clock(date: Date): string {
 	});
 }
 
+export function weekendClock(date: Date): string {
+	const weekday = new Intl.DateTimeFormat(getLocale(), { weekday: 'long' }).format(date);
+	return m.we_clock({ weekday, time: `${pad(date.getHours())}:${pad(date.getMinutes())}` });
+}
+
 const WEEKDAY_SKILLS: SkillKey[] = [
 	'electrochemistry',
 	'encyclopedia',
@@ -132,6 +137,7 @@ export function weekendCopy() {
 	return {
 		...shared(),
 		skills: WEEKEND_SKILLS.map(skillPair),
+		clock: weekendClock,
 		dreaming: m.we_theme_dreaming(),
 		awake: m.we_theme_awake(),
 		internalizing: m.we_internalizing(),

@@ -78,6 +78,13 @@ export function mount(rootEl, copy) {
 		switchTheme(e.currentTarget, '#d6479f', syncThemeUi);
 	});
 
+	const clockEl = $('#we-clock');
+	const tickClock = () => {
+		clockEl.textContent = copy.clock(new Date());
+		later(tickClock, 60000 - (Date.now() % 60000) + 50);
+	};
+	afterPaint(tickClock);
+
 	const sleep = { k: 0, target: 0 };
 	const clear = (hex) => {
 		const m = /^#?([0-9a-f]{6})$/i.exec(hex);
