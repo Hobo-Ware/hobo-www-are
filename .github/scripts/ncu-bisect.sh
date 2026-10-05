@@ -56,7 +56,7 @@ progress() {
 
 apply_set() {
   local set_json="$1"
-  jq --argjson set "$set_json" '
+  jq --tab --argjson set "$set_json" '
     reduce ($set | to_entries[]) as $e (.;
       if (.dependencies // {})[$e.key]      then .dependencies[$e.key]     = $e.value
       elif (.devDependencies // {})[$e.key]  then .devDependencies[$e.key]  = $e.value
