@@ -1,4 +1,5 @@
 import * as m from '$lib/paraglide/messages';
+import type { Locale } from '$lib/paraglide/runtime';
 
 export type Hype = { messages: string[]; slogan: string };
 export type Attribute = 'intellect' | 'psyche' | 'physique' | 'motorics' | 'laziness';
@@ -120,20 +121,49 @@ export const statLabel = (attribute: Attribute, value: number) =>
 
 export const GITHUB_URL = 'https://github.com/Hobo-Ware';
 
-export type Project = { name: string; href: string; icon: string | null; line: () => string };
+type Story = (inputs?: Record<string, never>, options?: { locale?: Locale }) => string;
+
+export type Project = {
+	id: string;
+	name: string;
+	href: string;
+	host: string;
+	icon: string | null;
+	rank?: number;
+	schemaType: 'WebApplication' | 'SoftwareApplication';
+	line: () => string;
+	story: Story;
+};
 
 export const PROJECTS: Project[] = [
-	{ name: 'Trakt', href: 'https://app.trakt.tv', icon: null, line: m.project_trakt_line },
 	{
-		name: 'kelp',
-		href: 'https://kelp.hoboware.dev',
-		icon: 'projects/kelp-128.webp',
-		line: m.project_kelp_line
+		id: 'trakt',
+		name: 'Trakt',
+		href: 'https://app.trakt.tv',
+		host: 'app.trakt.tv',
+		icon: null,
+		schemaType: 'WebApplication',
+		line: m.project_trakt_line,
+		story: m.inv_trakt
 	},
 	{
+		id: 'kelp',
+		name: 'kelp',
+		href: 'https://kelp.hoboware.dev',
+		host: 'kelp.hoboware.dev',
+		icon: 'projects/kelp-128.webp',
+		schemaType: 'SoftwareApplication',
+		line: m.project_kelp_line,
+		story: m.inv_kelp
+	},
+	{
+		id: 'stdusk',
 		name: 'stdusk',
 		href: 'https://stdusk.hoboware.dev',
+		host: 'stdusk.hoboware.dev',
 		icon: 'projects/stdusk-128.webp',
-		line: m.project_stdusk_line
+		schemaType: 'SoftwareApplication',
+		line: m.project_stdusk_line,
+		story: m.inv_stdusk
 	}
 ];

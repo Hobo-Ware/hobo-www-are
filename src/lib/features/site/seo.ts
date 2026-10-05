@@ -1,6 +1,6 @@
 import * as m from '$lib/paraglide/messages';
 import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
-import { FOUNDERS, GITHUB_URL } from './content';
+import { FOUNDERS, GITHUB_URL, PROJECTS } from './content';
 
 export const SITE_URL = 'https://hoboware.dev';
 
@@ -52,9 +52,31 @@ export function structuredData(locale: Locale) {
 		description: m.seo_description({}, { locale }),
 		publisher: { '@id': organization['@id'] }
 	};
+	const projects = {
+		'@type': 'ItemList',
+		'@id': `${SITE_URL}/#projects`,
+		name: m.inv_list_name({}, { locale }),
+		itemListElement: PROJECTS.map((project, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			item: {
+				'@type': project.schemaType,
+				name: project.name,
+				url: project.href,
+				description: project.story({}, { locale }),
+				applicationCategory:
+					project.schemaType === 'WebApplication'
+						? 'EntertainmentApplication'
+						: 'DeveloperApplication',
+				...(project.schemaType === 'SoftwareApplication' ? { operatingSystem: 'macOS' } : {}),
+				...(project.icon ? { image: `${SITE_URL}/${project.icon}` } : {}),
+				creator: { '@id': organization['@id'] }
+			}
+		}))
+	};
 	const json = JSON.stringify({
 		'@context': 'https://schema.org',
-		'@graph': [organization, website]
+		'@graph': [organization, website, projects]
 	});
 	return `<script type="application/ld+json">${json.replace(/</g, '\\u003c')}</script>`;
 }
