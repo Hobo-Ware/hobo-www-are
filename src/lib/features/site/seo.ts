@@ -11,7 +11,15 @@ const FOUNDER_NAMES: Record<string, string> = { vlad: 'Vlad Jerca', sefer: 'Sefe
 export const pageUrl = (locale: Locale) =>
 	locale === baseLocale ? `${SITE_URL}/` : `${SITE_URL}/${locale}`;
 
-export const ogImage = (locale: Locale) => `${SITE_URL}/og/og-${locale}.png`;
+export type OgMode = 'weekday' | 'weekend';
+
+export const ogMode = (date: Date): OgMode =>
+	date.getUTCDay() === 0 || date.getUTCDay() === 6 ? 'weekend' : 'weekday';
+
+export const buildOgMode = ogMode(new Date(__BUILD_TIME__));
+
+export const ogImage = (locale: Locale, mode: OgMode = 'weekday') =>
+	`${SITE_URL}/og/og-${mode === 'weekend' ? 'weekend-' : ''}${locale}.png`;
 
 export const ogLocale = (locale: Locale) => OG_LOCALE[locale];
 
@@ -26,7 +34,7 @@ export function structuredData(locale: Locale) {
 		'@id': `${SITE_URL}/#organization`,
 		name: 'Hoboware',
 		url: `${SITE_URL}/`,
-		logo: `${SITE_URL}/favicon/light/apple-touch-icon.png`,
+		logo: `${SITE_URL}/favicon/icon-512.png`,
 		sameAs: [GITHUB_URL],
 		founder: FOUNDERS.map((founder) => ({
 			'@type': 'Person',

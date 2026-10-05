@@ -8,23 +8,7 @@
 		/>
 		<meta name="author" content="Hoboware" />
 
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="%sveltekit.assets%/favicon/light/apple-touch-icon.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="32x32"
-			href="%sveltekit.assets%/favicon/light/favicon-32x32.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="16x16"
-			href="%sveltekit.assets%/favicon/light/favicon-16x16.png"
-		/>
+		%hobo.icons%
 
 		<script>
 			(function () {
@@ -42,6 +26,12 @@
 						: day === 0 || day === 6
 							? 'weekend'
 							: 'weekday';
+				document.querySelectorAll('[data-weekday][data-weekend]').forEach(function (el) {
+					el.setAttribute(
+						el.tagName === 'META' ? 'content' : 'href',
+						el.getAttribute('data-' + root.dataset.mode)
+					);
+				});
 			})();
 		</script>
 		%hobo.fonts% %hobo.jsonld% %sveltekit.head%

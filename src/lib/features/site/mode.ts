@@ -1,5 +1,6 @@
 import type { Hype } from './content';
 import { weekdayCopy, weekendCopy } from './copy';
+import { applyIcons } from './icons';
 
 export type Mode = 'weekday' | 'weekend';
 
@@ -32,6 +33,7 @@ export function startModes(roots: Record<Mode, HTMLElement>, hype: Hype[]): () =
 		roots.weekend.classList.add('mode-weekend');
 		mode = next;
 		html.dataset.mode = next;
+		applyIcons(next);
 		scrollTo(0, 0);
 		running = previous.then((unmount) => {
 			unmount();
