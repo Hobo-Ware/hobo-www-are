@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
+	define: {
+		__BUILD_TIME__: JSON.stringify(new Date().toISOString())
+	},
 	plugins: [
 		sveltekit(),
 		paraglideVitePlugin({

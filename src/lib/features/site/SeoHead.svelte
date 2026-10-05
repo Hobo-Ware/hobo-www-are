@@ -1,14 +1,15 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
 	import { baseLocale, getLocale } from '$lib/paraglide/runtime';
-	import { alternates, ogImage, ogLocale, otherOgLocales, pageUrl } from './seo';
+	import { alternates, buildOgMode, ogImage, ogLocale, otherOgLocales, pageUrl } from './seo';
 
 	const locale = getLocale();
 	const title = m.seo_title();
 	const description = m.seo_description();
 	const url = pageUrl(locale);
-	const image = ogImage(locale);
-	const imageAlt = m.og_image_alt();
+	const mode = buildOgMode;
+	const image = ogImage(locale, mode);
+	const imageAlt = mode === 'weekend' ? m.og_image_alt_weekend() : m.og_image_alt();
 </script>
 
 <svelte:head>
@@ -19,7 +20,6 @@
 		<link rel="alternate" hreflang={alternate.locale} href={alternate.href} />
 	{/each}
 	<link rel="alternate" hreflang="x-default" href={pageUrl(baseLocale)} />
-	<meta name="theme-color" content="#0f1215" />
 
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="Hoboware" />
