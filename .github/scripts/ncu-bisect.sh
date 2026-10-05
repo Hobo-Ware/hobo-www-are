@@ -160,6 +160,12 @@ log "║ Bisection start: $TOTAL candidate(s)"
 log "║ Phase 1: install + check + build"
 log "╚══════════════════════════════════════════════════════════════════"
 
+log "▶ Baseline: verifying the unchanged tree first"
+if ! verify "baseline"; then
+  log "  ✗ the unchanged tree already fails, so no bump can be judged. Fix main first."
+  exit 1
+fi
+
 VERIFY_MODE=fast find_adoptable "$(cat "$INPUT_JSON")"
 
 log ""
