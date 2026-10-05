@@ -1,4 +1,5 @@
 import GRID from './logo-grid.json';
+import { createFireGL } from './fire-gl.js';
 
 export const BLAZE_MS = 4600;
 
@@ -177,13 +178,8 @@ const LUT32 = LUTS.map((lut) =>
 	})
 );
 
-function createEmbers(cv, makeCanvas, reduce, onIgnite) {
-	const ctx = cv.getContext('2d');
-	const g1 = makeCanvas(1, 1),
-		g1c = g1.getContext('2d');
-	const g2 = makeCanvas(1, 1),
-		g2c = g2.getContext('2d');
-	const FLAME_SPRITES = [
+function flameSprites(makeCanvas) {
+	return [
 		['255,255,245', '255,236,170'],
 		['255,244,190', '255,196,90'],
 		['255,214,120', '255,140,40'],
@@ -201,22 +197,174 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 		g.fillRect(0, 0, 64, 64);
 		return c;
 	});
+}
+
+function createFire2D(cv, makeCanvas, sprites) {
+	const ctx = cv.getContext('2d');
+	const g1 = makeCanvas(1, 1),
+		g1c = g1.getContext('2d');
+	const g2 = makeCanvas(1, 1),
+		g2c = g2.getContext('2d');
 	const cellCv = makeCanvas(1, 1),
 		cellCtx = cellCv.getContext('2d');
 	const gapCv = makeCanvas(1, 1),
 		gapCtx = gapCv.getContext('2d');
 	const flameCv = makeCanvas(1, 1),
 		flameCtx = flameCv.getContext('2d');
-	let cellImg = null,
+	let W = 1,
+		H = 1,
+		dpr = 1,
+		cs = 6,
+		n = 0,
+		flaming = false,
+		cellImg = null,
 		cellBuf = new Uint32Array(0),
 		CIDX = new Uint32Array(0),
 		gridCols = 1,
 		gridRows = 1,
 		rowTop = 0,
 		rowSpan = 1;
+	return {
+		dispose() {},
+		layout(width, height, ratio, size, CX, CY, count) {
+			W = width;
+			H = height;
+			dpr = ratio;
+			cs = size;
+			n = count;
+			cv.width = Math.round(W * dpr);
+			cv.height = Math.round(H * dpr);
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			g1.width = Math.max(1, cv.width >> 2);
+			g1.height = Math.max(1, cv.height >> 2);
+			g2.width = Math.max(1, Math.round(cv.width / 10));
+			g2.height = Math.max(1, Math.round(cv.height / 10));
+			gridCols = Math.max(1, Math.ceil(W / cs) + 1);
+			gridRows = Math.max(1, Math.ceil(H / cs) + 1);
+			cellCv.width = gridCols;
+			cellCv.height = gridRows;
+			cellImg = cellCtx.createImageData(gridCols, gridRows);
+			cellBuf = new Uint32Array(cellImg.data.buffer);
+			CIDX = new Uint32Array(n);
+			for (let i = 0; i < n; i++) {
+				const col = Math.round(CX[i] / cs),
+					row = Math.round(CY[i] / cs);
+				CIDX[i] =
+					row >= 0 && row < gridRows && col >= 0 && col < gridCols ? row * gridCols + col : 0;
+			}
+			let lo = gridRows,
+				hi = 0;
+			for (let i = 0; i < n; i++) {
+				const row = (CIDX[i] / gridCols) | 0;
+				if (row < lo) lo = row;
+				if (row > hi) hi = row;
+			}
+			rowTop = Math.min(lo, hi);
+			rowSpan = Math.max(1, hi - rowTop + 1);
+			gapCv.width = cv.width;
+			gapCv.height = Math.max(1, Math.ceil(rowSpan * cs * dpr));
+			gapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			gapCtx.fillStyle = '#000';
+			for (let c = 0; c < gridCols; c++) gapCtx.fillRect(c * cs + cs - 1, 0, 1, rowSpan * cs);
+			for (let r = 0; r < rowSpan; r++) gapCtx.fillRect(0, r * cs + cs - 1, W, 1);
+			flameCv.width = Math.max(1, cv.width >> 1);
+			flameCv.height = Math.max(1, cv.height >> 1);
+			flameCtx.setTransform(dpr / 2, 0, 0, dpr / 2, 0, 0);
+			flameCtx.globalCompositeOperation = 'lighter';
+			flameCtx.globalAlpha = 0.002;
+			for (const sprite of sprites) flameCtx.drawImage(sprite, 0, 0, 8, 8);
+			flameCtx.globalAlpha = 1;
+			ctx.globalCompositeOperation = 'lighter';
+			ctx.drawImage(flameCv, 0, 0, 8, 8);
+			ctx.globalCompositeOperation = 'source-over';
+		},
+		begin() {
+			flaming = false;
+			ctx.clearRect(0, 0, W, H);
+		},
+		cells(colors) {
+			for (let i = 0; i < n; i++) cellBuf[CIDX[i]] = colors[i];
+			cellCtx.putImageData(cellImg, 0, 0, 0, rowTop, gridCols, rowSpan);
+			ctx.imageSmoothingEnabled = false;
+			ctx.drawImage(
+				cellCv,
+				0,
+				rowTop,
+				gridCols,
+				rowSpan,
+				0,
+				rowTop * cs,
+				gridCols * cs,
+				rowSpan * cs
+			);
+			ctx.imageSmoothingEnabled = true;
+			ctx.save();
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.globalCompositeOperation = 'destination-out';
+			ctx.drawImage(gapCv, 0, Math.round(rowTop * cs * dpr));
+			ctx.restore();
+			ctx.globalCompositeOperation = 'lighter';
+		},
+		ember(x, y, size, lut, index, alpha) {
+			ctx.globalAlpha = alpha;
+			ctx.fillStyle = LUTS[lut][index];
+			ctx.fillRect(x - size / 2, y - size / 2, size, size);
+		},
+		flamesBegin() {
+			flaming = true;
+			flameCtx.clearRect(0, 0, W, H);
+		},
+		flame(index, x, y, size, alpha) {
+			flameCtx.globalAlpha = alpha;
+			flameCtx.drawImage(sprites[index], x - size / 2, y - size * 0.7, size, size * 1.35);
+		},
+		end(glowA, glowB) {
+			if (flaming) {
+				ctx.globalAlpha = 1;
+				ctx.drawImage(flameCv, 0, 0, W, H);
+			}
+			ctx.globalAlpha = 1;
+			ctx.globalCompositeOperation = 'source-over';
+			g1c.clearRect(0, 0, g1.width, g1.height);
+			g1c.drawImage(cv, 0, 0, g1.width, g1.height);
+			g2c.clearRect(0, 0, g2.width, g2.height);
+			g2c.drawImage(g1, 0, 0, g2.width, g2.height);
+			ctx.save();
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.globalCompositeOperation = 'lighter';
+			ctx.imageSmoothingEnabled = true;
+			ctx.globalAlpha = glowA;
+			ctx.drawImage(g1, 0, 0, cv.width, cv.height);
+			ctx.globalAlpha = glowB;
+			ctx.drawImage(g2, 0, 0, cv.width, cv.height);
+			ctx.restore();
+		}
+	};
+}
 
+function createFireRenderer(cv, makeCanvas, maxEmbers, maxFlames) {
+	const sprites = flameSprites(makeCanvas);
+	const atlas = makeCanvas(64 * sprites.length, 64);
+	const a = atlas.getContext('2d');
+	sprites.forEach((sprite, i) => a.drawImage(sprite, i * 64, 0));
+	const options = { atlas, lut32: LUT32, maxEmbers, maxFlames };
+	try {
+		const probe = createFireGL(makeCanvas(1, 1), options);
+		if (probe) {
+			probe.dispose();
+			const gl = createFireGL(cv, options);
+			if (gl) return gl;
+		}
+	} catch {
+		return createFire2D(cv, makeCanvas, sprites);
+	}
+	return createFire2D(cv, makeCanvas, sprites);
+}
+
+function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 	const MAX_EMBERS = 900,
 		MAX_FLAMES = 380;
+	const gfx = createFireRenderer(cv, makeCanvas, MAX_EMBERS, MAX_FLAMES);
 	const E = {
 		x: new Float32Array(MAX_EMBERS),
 		y: new Float32Array(MAX_EMBERS),
@@ -251,6 +399,7 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 		CFL,
 		CSP,
 		CH,
+		CC = new Uint32Array(0),
 		HOT = new Uint32Array(0);
 
 	const blaze = { t0: -1e9, dur: BLAZE_MS, cool: 0, k: 0, from: 0 };
@@ -280,13 +429,6 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 		W = width;
 		H = height;
 		dpr = Math.min(2, ratio || 1);
-		cv.width = Math.round(W * dpr);
-		cv.height = Math.round(H * dpr);
-		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		g1.width = Math.max(1, cv.width >> 2);
-		g1.height = Math.max(1, cv.height >> 2);
-		g2.width = Math.max(1, Math.round(cv.width / 10));
-		g2.height = Math.max(1, Math.round(cv.height / 10));
 		const base = H - footH + 4;
 		const pileH = H * (W < 700 ? 0.62 : 0.66);
 		const lr = GRID.rows,
@@ -357,50 +499,11 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 		}
 		HOT = new Uint32Array(hot);
 		for (let i = 0, h = 0; i < N; i++) if (CK[i]) HOT[h++] = i;
-		layoutCellImage();
+		CC = new Uint32Array(N);
+		gfx.layout(W, H, dpr, cs, CX, CY, N);
 		E.n = 0;
 		F.n = 0;
-		flameCv.width = Math.max(1, cv.width >> 1);
-		flameCv.height = Math.max(1, cv.height >> 1);
-		flameCtx.setTransform(dpr / 2, 0, 0, dpr / 2, 0, 0);
-		flameCtx.globalCompositeOperation = 'lighter';
-		flameCtx.globalAlpha = 0.002;
-		for (const s of FLAME_SPRITES) flameCtx.drawImage(s, 0, 0, 8, 8);
-		flameCtx.globalAlpha = 1;
-		ctx.globalCompositeOperation = 'lighter';
-		ctx.drawImage(flameCv, 0, 0, 8, 8);
-		ctx.globalCompositeOperation = 'source-over';
 		ready = true;
-	}
-
-	function layoutCellImage() {
-		gridCols = Math.max(1, Math.ceil(W / cs) + 1);
-		gridRows = Math.max(1, Math.ceil(H / cs) + 1);
-		cellCv.width = gridCols;
-		cellCv.height = gridRows;
-		cellImg = cellCtx.createImageData(gridCols, gridRows);
-		cellBuf = new Uint32Array(cellImg.data.buffer);
-		CIDX = new Uint32Array(N);
-		for (let i = 0; i < N; i++) {
-			const col = Math.round(CX[i] / cs),
-				row = Math.round(CY[i] / cs);
-			CIDX[i] = row >= 0 && row < gridRows && col >= 0 && col < gridCols ? row * gridCols + col : 0;
-		}
-		let lo = gridRows,
-			hi = 0;
-		for (let i = 0; i < N; i++) {
-			const row = (CIDX[i] / gridCols) | 0;
-			if (row < lo) lo = row;
-			if (row > hi) hi = row;
-		}
-		rowTop = Math.min(lo, hi);
-		rowSpan = Math.max(1, hi - rowTop + 1);
-		gapCv.width = cv.width;
-		gapCv.height = Math.max(1, Math.ceil(rowSpan * cs * dpr));
-		gapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		gapCtx.fillStyle = '#000';
-		for (let c = 0; c < gridCols; c++) gapCtx.fillRect(c * cs + cs - 1, 0, 1, rowSpan * cs);
-		for (let r = 0; r < rowSpan; r++) gapCtx.fillRect(0, r * cs + cs - 1, W, 1);
 	}
 
 	function spawn(i, kick) {
@@ -440,7 +543,7 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 		lastT = now;
 		const dec = Math.pow(0.95, dt * 60),
 			rec = Math.pow(0.982, dt * 60);
-		ctx.clearRect(0, 0, W, H);
+		gfx.begin();
 
 		const speed = Math.hypot(ptr.vx, ptr.vy);
 		const R = Math.max(110, W * 0.09),
@@ -496,9 +599,9 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 			CH[i] = h;
 			CFL[i] *= dec;
 			CSP[i] *= rec;
-			cellBuf[CIDX[i]] = LUT32[kind][(h * 95) | 0];
+			CC[i] = LUT32[kind][(h * 95) | 0];
 		}
-		drawCells();
+		gfx.cells(CC);
 
 		if (!reduce) {
 			acc += dt * (W / 1000) * 38 * (1 + Math.min(2, speed / 800) + fire * 5);
@@ -515,7 +618,6 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 				burst -= b;
 				for (let k = 0; k < b; k++) spawn(HOT[(Math.random() * HOT.length) | 0], 120);
 			}
-			ctx.globalCompositeOperation = 'lighter';
 			const pon = ptr.on,
 				px = ptr.x,
 				py = ptr.y,
@@ -574,56 +676,26 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 				E.life[j] = life;
 				const heat = E.heat[j] * (0.35 + 0.65 * life) + Math.sin(t * 9 + E.spin[j]) * 0.05;
 				const sz = E.s[j] * (0.35 + 0.65 * life);
-				ctx.globalAlpha = life > 0.625 ? 1 : life * 1.6;
-				ctx.fillStyle = (E.cap[j] ? CAP : COAL)[heat <= 0 ? 0 : heat >= 1 ? 95 : (heat * 95) | 0];
-				ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz);
+				gfx.ember(
+					x,
+					y,
+					sz,
+					E.cap[j] ? 2 : 1,
+					heat <= 0 ? 0 : heat >= 1 ? 95 : (heat * 95) | 0,
+					life > 0.625 ? 1 : life * 1.6
+				);
 			}
 			if (fire > 0.01 || F.n) drawFlames(dt, t, fire);
-			ctx.globalAlpha = 1;
-			ctx.globalCompositeOperation = 'source-over';
 		}
 
-		g1c.clearRect(0, 0, g1.width, g1.height);
-		g1c.drawImage(cv, 0, 0, g1.width, g1.height);
-		g2c.clearRect(0, 0, g2.width, g2.height);
-		g2c.drawImage(g1, 0, 0, g2.width, g2.height);
-		ctx.save();
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.globalCompositeOperation = 'lighter';
-		ctx.imageSmoothingEnabled = true;
 		const glow = Math.max(blaze.k, fan.heat * 0.45);
-		ctx.globalAlpha = 0.5 + glow * 0.14;
-		ctx.drawImage(g1, 0, 0, cv.width, cv.height);
-		ctx.globalAlpha = 0.55 + glow * 0.16;
-		ctx.drawImage(g2, 0, 0, cv.width, cv.height);
-		ctx.restore();
+		gfx.end(0.5 + glow * 0.14, 0.55 + glow * 0.16);
 
 		ptr.vx *= Math.pow(0.88, dt * 60);
 		ptr.vy *= Math.pow(0.88, dt * 60);
 	}
-	function drawCells() {
-		cellCtx.putImageData(cellImg, 0, 0, 0, rowTop, gridCols, rowSpan);
-		ctx.imageSmoothingEnabled = false;
-		ctx.drawImage(
-			cellCv,
-			0,
-			rowTop,
-			gridCols,
-			rowSpan,
-			0,
-			rowTop * cs,
-			gridCols * cs,
-			rowSpan * cs
-		);
-		ctx.imageSmoothingEnabled = true;
-		ctx.save();
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.globalCompositeOperation = 'destination-out';
-		ctx.drawImage(gapCv, 0, Math.round(rowTop * cs * dpr));
-		ctx.restore();
-	}
 	function drawFlames(dt, t, k) {
-		flameCtx.clearRect(0, 0, W, H);
+		gfx.flamesBegin();
 		const want = k * (W / 1000) * 520 * dt;
 		for (let i = 0; i < want; i++) spawnFlame(k);
 		const pull = ptr.on ? ptr.vx * 0.04 * dt : 0,
@@ -651,17 +723,8 @@ function createEmbers(cv, makeCanvas, reduce, onIgnite) {
 			F.y[j] = y;
 			const age = 1 - life;
 			const sz = F.s[j] * (age < 0.2 ? 0.5 + age * 2.5 : 1 - (age - 0.2) * 0.7);
-			flameCtx.globalAlpha = Math.min(1, life * 2.2) * 0.44;
-			flameCtx.drawImage(
-				FLAME_SPRITES[age >= 0.8333 ? 5 : (age * 6) | 0],
-				x - sz / 2,
-				y - sz * 0.7,
-				sz,
-				sz * 1.35
-			);
+			gfx.flame(age >= 0.8333 ? 5 : (age * 6) | 0, x, y, sz, Math.min(1, life * 2.2) * 0.44);
 		}
-		ctx.globalAlpha = 1;
-		ctx.drawImage(flameCv, 0, 0, W, H);
 	}
 	function ignite(now) {
 		if (now < blaze.cool) return;
