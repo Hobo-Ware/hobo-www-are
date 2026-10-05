@@ -1,0 +1,22 @@
+{
+	"name": "Hoboware",
+	"short_name": "Hoboware",
+	"start_url": "/",
+	"display": "browser",
+	"theme_color": "#0f1215",
+	"background_color": "#0f1215",
+	"icons": [
+		{
+			"src": "/favicon/icon-192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/favicon/icon-512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	]
+}
