@@ -1,0 +1,22 @@
+{
+	"name": "Hoboware",
+	"short_name": "Hoboware",
+	"start_url": "/#weekend",
+	"display": "browser",
+	"theme_color": "#0d0a15",
+	"background_color": "#0d0a15",
+	"icons": [
+		{
+			"src": "/favicon/icon-weekend-192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/favicon/icon-weekend-512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	]
+}
