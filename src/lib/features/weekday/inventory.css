@@ -1,0 +1,197 @@
+.mode-weekday .inventory {
+	position: relative;
+	z-index: 2;
+	width: min(1240px, 100% - 2 * max(16px, 4vw));
+	margin: clamp(64px, 8vw, 110px) auto 0;
+
+	.inv-head {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 10px 16px;
+		margin-bottom: 28px;
+	}
+	.inv-kicker {
+		margin: 0 0 10px;
+		font: 700 0.82rem/1 var(--label);
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--hot-num);
+	}
+	h2 {
+		margin: 0;
+		font: 400 clamp(2.2rem, 4.6vw, 3.6rem) / 1 var(--display);
+		color: var(--ink);
+	}
+	.inv-sub {
+		margin: 0;
+		font: 700 0.85rem/1 var(--label);
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.inv-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: clamp(22px, 3vw, 36px);
+	}
+	@media (min-width: 900px) {
+		.inv-list {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+	.inv-item {
+		position: relative;
+		isolation: isolate;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: clamp(24px, 3vw, 32px) clamp(22px, 2.6vw, 30px) clamp(26px, 3vw, 34px);
+		color: var(--paper-ink);
+	}
+	.inv-item::before {
+		content: '';
+		position: absolute;
+		inset: -3px;
+		z-index: -3;
+		pointer-events: none;
+		background: var(--ember-rim);
+		filter: blur(3px);
+		opacity: var(--rim-alpha);
+		-webkit-mask: var(--torn) center / 100% 100% no-repeat;
+		mask: var(--torn) center / 100% 100% no-repeat;
+		animation: smoulder 3.8s ease-in-out infinite;
+	}
+	.inv-item::after {
+		content: '';
+		position: absolute;
+		inset: -3px;
+		z-index: -3;
+		pointer-events: none;
+		background: var(--ember-rim);
+		filter: blur(7px);
+		opacity: 0;
+		-webkit-mask: var(--torn) center / 100% 100% no-repeat;
+		mask: var(--torn) center / 100% 100% no-repeat;
+		transition: opacity 0.45s ease;
+	}
+	.inv-paper {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		pointer-events: none;
+		background: var(--char);
+		-webkit-mask: var(--torn) center / 100% 100% no-repeat;
+		mask: var(--torn) center / 100% 100% no-repeat;
+	}
+	.inv-paper::after {
+		content: '';
+		position: absolute;
+		inset: 3px;
+		background: var(--paper-grain), var(--paper);
+		background-size:
+			220px 220px,
+			auto;
+		-webkit-mask: var(--torn-inner) center / 100% 100% no-repeat;
+		mask: var(--torn-inner) center / 100% 100% no-repeat;
+	}
+	.inv-top {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+	.inv-icon {
+		flex: none;
+		width: 56px;
+		height: 56px;
+		display: grid;
+		place-items: center;
+	}
+	.inv-icon img,
+	.inv-icon svg {
+		width: 56px;
+		height: 56px;
+		border-radius: 12px;
+	}
+	.inv-icon .trakt-fg {
+		fill: var(--paper-ink);
+	}
+	.inv-icon .trakt-bg {
+		fill: var(--paper);
+	}
+	h3 {
+		margin: 0;
+		font: 400 clamp(2rem, 3vw, 2.5rem) / 1 var(--display);
+	}
+	.inv-story {
+		flex: 1;
+		margin: 0;
+		color: var(--paper-muted);
+		font-style: italic;
+	}
+	.inv-link {
+		align-self: flex-start;
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding: 9px 2px 4px;
+		font: 800 0.92rem/1 var(--label);
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: var(--paper-ink);
+		border-bottom: 1px solid var(--char-rule);
+	}
+	.inv-coal {
+		position: relative;
+		width: 10px;
+		height: 10px;
+		border-radius: 1px;
+		background: #ff8a2e;
+		box-shadow: 0 0 6px var(--coal-glow);
+	}
+	.inv-coal::after {
+		content: '';
+		position: absolute;
+		inset: -4px;
+		border-radius: 2px;
+		background: var(--coal-hot);
+		box-shadow: 0 0 14px var(--coal-glow-hot);
+		opacity: 0;
+		transition: opacity 0.35s ease;
+	}
+	.inv-arrow {
+		color: var(--paper-accent);
+		transition: transform 0.3s ease;
+	}
+	.inv-item:hover::after,
+	.inv-item:focus-within::after {
+		opacity: 0.7;
+	}
+	.inv-item:hover .inv-coal::after,
+	.inv-item:focus-within .inv-coal::after {
+		opacity: 1;
+	}
+	.inv-link:hover .inv-arrow,
+	.inv-link:focus-visible .inv-arrow {
+		transform: translate(2px, -2px);
+	}
+	.inv-link:focus-visible {
+		outline: 2px solid var(--ember);
+		outline-offset: 4px;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.inv-item::before {
+			animation: none;
+		}
+		.inv-item::after,
+		.inv-coal::after,
+		.inv-arrow {
+			transition: none;
+		}
+	}
+}

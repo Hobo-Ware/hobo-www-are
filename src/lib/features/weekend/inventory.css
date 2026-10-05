@@ -1,0 +1,102 @@
+.mode-weekend .we-inventory {
+	width: min(1120px, 100% - 2 * max(16px, 4vw));
+	margin: clamp(56px, 8vw, 110px) auto 0;
+	color: var(--ink);
+
+	.we-inv-kicker {
+		margin: 0;
+		font: 500 0.82rem/1.2 var(--mono);
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	h2 {
+		margin: 8px 0 0;
+		font: 600 clamp(2rem, 4.4vw, 3.2rem) / 1 var(--display);
+	}
+	.we-inv-sub {
+		margin: 8px 0 0;
+		color: var(--muted);
+	}
+	.minor-deal {
+		list-style: none;
+		margin: 32px 0 0;
+		padding: 10px 0 40px;
+		gap: clamp(28px, 4vw, 52px);
+	}
+	.minor-deal > li {
+		display: flex;
+	}
+	.minor-deal > li:nth-child(3n + 1) .tarot {
+		--fan: -2deg;
+		--d: 0s;
+	}
+	.minor-deal > li:nth-child(3n + 2) .tarot {
+		--fan: 0deg;
+		--d: -3.3s;
+	}
+	.minor-deal > li:nth-child(3n + 3) .tarot {
+		--fan: 2deg;
+		--d: -6.6s;
+	}
+	.tarot.minor {
+		width: min(280px, 78vw);
+	}
+	.tarot.minor .window > img,
+	.tarot.minor .window .hl-photo {
+		inset: auto;
+		left: 16%;
+		top: 30%;
+		width: 68%;
+		height: auto;
+		aspect-ratio: 1;
+	}
+	.tarot.minor .window .hl-photo img {
+		border-radius: 22%;
+	}
+	.tarot.minor .window > img {
+		border-radius: 22%;
+	}
+	.tarot.minor .sigil-icon {
+		justify-self: center;
+		width: 24cqw;
+		height: 24cqw;
+		border-radius: 22%;
+		box-shadow:
+			0 0 0 1px color-mix(in srgb, var(--card-gold) 70%, transparent),
+			0 0 0 4px color-mix(in srgb, var(--card-gold) 18%, transparent);
+		filter: url(#we-duo);
+	}
+	.tarot.minor .back .desc {
+		font-size: 5.1cqw;
+	}
+	.tarot.minor .reading {
+		font-size: 4.8cqw;
+	}
+	.tarot.minor .reading b {
+		font-size: 3.2cqw;
+	}
+	.tarot.minor .li {
+		font-size: 3.4cqw;
+	}
+	.tarot.minor .turn-back {
+		font-size: 3.2cqw;
+	}
+}
+
+:root[data-theme='light'] .mode-weekend .we-inventory .tarot.minor .sigil-icon {
+	filter: url(#we-duo-light);
+}
+
+:root:not([data-theme='light']) .mode-weekend .we-inventory .tarot.minor {
+	.window {
+		background:
+			radial-gradient(circle at 50% 56%, rgba(148, 116, 255, 0.34), transparent 52%),
+			var(--card-window);
+	}
+	.window > img,
+	.window .hl-photo .hl-mono,
+	.sigil-icon {
+		filter: url(#we-duo) brightness(1.45) contrast(1.08);
+	}
+}

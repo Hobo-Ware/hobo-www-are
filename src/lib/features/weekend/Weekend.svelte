@@ -19,6 +19,7 @@
 	import cabinet from './cabinet.json';
 	import { restingWave } from './geometry';
 	import TarotCard from './TarotCard.svelte';
+	import WeekendInventory from './WeekendInventory.svelte';
 	import WeekendDefs from './WeekendDefs.svelte';
 
 	const { hype: entries }: { hype: Hype[] } = $props();
@@ -166,6 +167,8 @@
 				{/each}
 			</div>
 		</section>
+
+		<WeekendInventory />
 	</div>
 
 	<footer class="mosaic-foot">

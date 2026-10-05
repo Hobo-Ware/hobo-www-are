@@ -9,6 +9,7 @@
 	import ProjectLinks from '$lib/features/site/ProjectLinks.svelte';
 	import { FOUNDERS, GITHUB_URL, LEVELS, check, type Hype } from '$lib/features/site/content';
 	import { PRERENDER_SKILLS, clock, tallestHype } from '$lib/features/site/copy';
+	import WeekdayInventory from './WeekdayInventory.svelte';
 	import WeekdayStats from './WeekdayStats.svelte';
 
 	const { hype: entries }: { hype: Hype[] } = $props();
@@ -184,6 +185,8 @@
 			</div>
 		</section>
 	</div>
+
+	<WeekdayInventory />
 
 	<div class="burn" aria-hidden="true"></div>
 	<section class="pit" aria-label={m.footer_label()}>
