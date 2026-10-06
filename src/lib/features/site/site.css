@@ -3,7 +3,11 @@ body {
 	margin: 0;
 }
 html {
-	touch-action: pan-x pan-y;
+	touch-action: pan-y;
+}
+#wd-root,
+#we-root {
+	overflow-x: clip;
 }
 html[data-mode='weekend'] #wd-root,
 html[data-mode='weekday'] #we-root {
