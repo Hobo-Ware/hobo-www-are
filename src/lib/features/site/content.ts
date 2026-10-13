@@ -165,5 +165,15 @@ export const PROJECTS: Project[] = [
 		schemaType: 'SoftwareApplication',
 		line: m.project_stdusk_line,
 		story: m.inv_stdusk
+	},
+	{
+		id: 'tidewatch',
+		name: 'tidewatch',
+		href: 'https://github.com/Hobo-Ware/tidewatch',
+		host: 'github.com/Hobo-Ware/tidewatch',
+		icon: 'projects/tidewatch-128.webp',
+		schemaType: 'SoftwareApplication',
+		line: m.project_tidewatch_line,
+		story: m.inv_tidewatch
 	}
 ];
